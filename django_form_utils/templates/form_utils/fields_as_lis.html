@@ -1,0 +1,14 @@
+{% for field in fields %}
+{% if field.is_hidden %}
+{{ field }}
+{% else %}
+<li{{ field.row_attrs }}>
+  {{ field.errors }}
+  <label for="{{ field.auto_id }}">
+  {{ field.label }}
+  {% if field.field.required %}{% else %}<em class="hide">(optional)</em>{% endif %}
+  </label>
+  {{ field }}
+</li>
+{% endif %}
+{% endfor %}

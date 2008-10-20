@@ -1,0 +1,13 @@
+{% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+{% for fieldset in form.fieldsets %}
+<fieldset class="fieldset_{{ fieldset.name }}{% if forloop.first %} first{% endif %}">
+{% if fieldset.legend %}
+<legend>{{ fieldset.legend }}</legend>
+{% endif %}
+<ul>
+{% with fieldset as fields %}
+{% include "form_utils/fields_as_lis.html" %}
+{% endwith %}
+</ul>
+</fieldset>
+{% endfor %}

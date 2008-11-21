@@ -1,7 +1,7 @@
 """
 forms for django_form_utils
 
-Time-stamp: <2008-11-09 12:08:08 carljm forms.py>
+Time-stamp: <2008-11-21 01:54:45 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -36,6 +36,9 @@ class FieldsetCollection(object):
     def __init__(self, form, fieldsets):
         self.form = form
         self.fieldsets = fieldsets
+
+    def __len__(self):
+        return len(self.fieldsets)
 
     def __iter__(self):
         if not self.fieldsets:

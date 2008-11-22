@@ -1,7 +1,7 @@
 """
 widgets for django_form_utils
 
-Time-stamp: <2008-10-13 14:08:42 carljm widgets.py>
+Time-stamp: <2008-11-22 17:32:48 carljm widgets.py>
 
 parts of this code taken from http://www.djangosnippets.org/snippets/934/
  - thanks baumer1122
@@ -34,7 +34,7 @@ class ImageWidget(forms.widgets.FileInput):
         output.append(super(forms.widgets.FileInput, self).render(name, value, attrs))
         try: # is image
             Image.open(file_path)
-            output.append('<br />%s: %s' % (_(u'Current'), thumbnail(str(value))))
+            output.append('<br />%s' % (thumbnail(str(value)),))
         except IOError: # not image
             pass
         return mark_safe(u''.join(output))

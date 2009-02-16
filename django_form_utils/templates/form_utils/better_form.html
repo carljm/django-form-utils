@@ -1,4 +1,6 @@
-{% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+{% extends "form_utils/form.html" %}
+
+{% block fields %}
 {% for fieldset in form.fieldsets %}
 <fieldset class="fieldset_{{ fieldset.name }}{% if forloop.first %} first{% endif %}">
 {% if fieldset.legend %}
@@ -11,3 +13,4 @@
 </ul>
 </fieldset>
 {% endfor %}
+{% endblock %}

@@ -1,7 +1,7 @@
 """
 forms for django_form_utils
 
-Time-stamp: <2008-11-21 01:54:45 carljm forms.py>
+Time-stamp: <2009-02-16 12:10:18 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -195,3 +195,37 @@ class BetterModelForm(BetterBaseForm, forms.ModelForm):
     __metaclass__ = BetterModelFormMetaclass
     __doc__ = BetterBaseForm.__doc__
     
+
+class BasePreviewForm (object):
+    """
+    Mixin to add preview functionality to a form.  If the form is submitted with 
+    the following k/v pair in its ``data`` dictionary:
+        
+        'submit': 'preview'    (value string is case insensitive)
+    
+    Then ``PreviewForm.preview`` will be marked ``True`` and the form will
+    be marked invalid (though this invalidation will not put an error in 
+    its ``errors`` dictionary).
+    
+    """
+    def __init__(self, *args, **kwargs):
+        self.preview = self.check_preview(**kwargs)
+        super(BasePreviewForm, self).__init__(*args, **kwargs)
+    
+    def check_preview(self, **kwargs):
+        if (kwargs.has_key('data') and
+            kwargs['data'].has_key('submit') and
+            kwargs['data']['submit'].lower() == u'preview'):
+                return True
+        return False
+    
+    def is_valid(self, *args, **kwargs):
+        if self.preview:
+            return False
+        return super(BasePreviewForm, self).is_valid()
+
+class PreviewModelForm(BasePreviewForm, BetterModelForm):
+    pass
+
+class PreviewForm(BasePreviewForm, BetterForm):
+    pass

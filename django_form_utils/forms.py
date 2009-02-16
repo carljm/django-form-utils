@@ -1,7 +1,7 @@
 """
 forms for django_form_utils
 
-Time-stamp: <2009-02-16 12:10:18 carljm forms.py>
+Time-stamp: <2009-02-16 13:17:17 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -209,14 +209,12 @@ class BasePreviewForm (object):
     
     """
     def __init__(self, *args, **kwargs):
-        self.preview = self.check_preview(**kwargs)
         super(BasePreviewForm, self).__init__(*args, **kwargs)
+        self.preview = self.check_preview(kwargs.get('data', None))
     
-    def check_preview(self, **kwargs):
-        if (kwargs.has_key('data') and
-            kwargs['data'].has_key('submit') and
-            kwargs['data']['submit'].lower() == u'preview'):
-                return True
+    def check_preview(self, data):
+        if data and data.get('submit', '').lower() == u'preview':
+            return True
         return False
     
     def is_valid(self, *args, **kwargs):

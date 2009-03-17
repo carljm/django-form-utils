@@ -1,5 +1,5 @@
 """
-widgets for django_form_utils
+widgets for django-form-utils
 
 Time-stamp: <2008-11-22 17:32:48 carljm widgets.py>
 

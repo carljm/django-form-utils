@@ -1,5 +1,5 @@
 """
-forms for django_form_utils
+forms for django-form-utils
 
 Time-stamp: <2009-02-16 13:17:17 carljm forms.py>
 

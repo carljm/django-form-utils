@@ -1,5 +1,5 @@
 """
-models for django_form_utils tests
+models for django-form-utils tests
 
 Time-stamp: <2008-10-13 10:42:02 carljm models.py>
 

@@ -1,5 +1,5 @@
 r"""
-Tests for django_form_utils
+Tests for django-form-utils
 
 Time-stamp: <2008-10-13 13:05:51 carljm __init__.py>
 
@@ -9,7 +9,7 @@ forms
 
 >>> from django import forms
 
->>> from django_form_utils.forms import BetterForm
+>>> from form_utils.forms import BetterForm
 
 
 Define a ``BetterForm`` with a couple fieldsets:
@@ -49,8 +49,8 @@ Fieldset('Advanced', ['three', 'one'], legend='Advanced', description='')
 <input type="text" name="one" id="id_one" />
 
 
->>> from django_form_utils.tests.models import FieldsetTestModel
->>> from django_form_utils.forms import BetterModelForm
+>>> from form_utils.tests.models import FieldsetTestModel
+>>> from form_utils.forms import BetterModelForm
 
 
 Create and test a ``BetterModelForm`` with a couple fieldsets:
@@ -156,7 +156,7 @@ Template filters
 >>> _old_template_dirs = settings.TEMPLATE_DIRS
 >>> settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
 
->>> from django_form_utils.templatetags.form_utils import render
+>>> from form_utils.templatetags.form_utils_tags import render
 
 >>> class PlainForm(forms.Form):
 ...     one = forms.CharField()

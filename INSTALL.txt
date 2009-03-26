@@ -1,0 +1,15 @@
+To install django-form-utils, run the following command inside this
+directory:
+
+    python setup.py install
+
+You can also just copy the ``form_utils`` directory somewhere on your Python
+path, or symlink to it from somewhere on your Python path; this is useful if
+you're working from a source control checkout.
+
+For instructions on including this application in a Django project once it's
+installed, see README.txt.
+
+This application requires Python 2.3 or later and Django 1.0 or later. You
+can obtain Python from http://www.python.org/ and Django from
+http://www.djangoproject.com/.

@@ -1,7 +1,7 @@
 """
 forms for django-form-utils
 
-Time-stamp: <2009-03-26 15:29:38 carljm forms.py>
+Time-stamp: <2009-03-26 15:34:19 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -133,6 +133,8 @@ class BetterBaseForm(object):
     the ``BoundField``.  Also, a CSS class of "required" or "optional"
     will automatically be added to the row_attrs of each
     ``BoundField``, depending on whether the field is required.
+
+    There is no automatic inheritance of ``row_attrs``.
     
     The fieldsets declaration is a list of two-tuples very similar to
     the ``fieldsets`` option on a ModelAdmin class in

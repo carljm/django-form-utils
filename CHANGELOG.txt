@@ -1,0 +1,7 @@
+===========================
+django-form-utils changelog
+===========================
+
+2009-03-26 Carl Meyer <carl@dirtcircle.com>
+
+* Initial public release (v0.1.0)

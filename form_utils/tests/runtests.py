@@ -4,7 +4,7 @@ import os, sys
 
 parent = os.path.dirname(os.path.dirname(os.path.dirname(
             os.path.abspath(__file__))))
-print parent
+
 sys.path.insert(0, parent)
 
 from django.core.management import setup_environ, call_command

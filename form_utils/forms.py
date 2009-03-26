@@ -1,7 +1,7 @@
 """
 forms for django-form-utils
 
-Time-stamp: <2009-03-26 15:34:19 carljm forms.py>
+Time-stamp: <2009-03-26 16:21:34 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -81,7 +81,14 @@ def get_fieldsets(bases, attrs):
             fieldsets = getattr(base, 'base_fieldsets', None)
             if fieldsets is not None:
                 break
-    return fieldsets or ()
+    fieldsets = fieldsets or ()
+    # try looping through fieldsets to catch malformed setting early
+    try:
+        for name, option in fieldsets:
+            pass
+    except TypeError:
+        raise ValueError('"fieldsets" must be an iterable of two-tuples')
+    return fieldsets
 
 def get_row_attrs(bases, attrs):
     """

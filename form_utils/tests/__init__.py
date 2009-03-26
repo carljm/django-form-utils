@@ -1,7 +1,7 @@
 r"""
 Tests for django-form-utils
 
-Time-stamp: <2009-03-26 15:26:11 carljm __init__.py>
+Time-stamp: <2009-03-26 16:22:02 carljm __init__.py>
 
 
 forms
@@ -170,6 +170,19 @@ two: ' class="optional"'
 one: ' style="display: none" class="required"'
 two: ' class="optional"'
 
+Error handling
+--------------
+
+If we define a single fieldset and leave off the trailing , in our tuple, we get a friendly error:
+
+>>> class ErrorForm(BetterForm):
+...     one = forms.CharField()
+...     two = forms.CharField()
+...     class Meta:
+...         fieldsets = ((None, {'fields': ('one', 'two')}))
+Traceback (most recent call last):
+...
+ValueError: "fieldsets" must be an iterable of two-tuples
 
 Template filters
 ================

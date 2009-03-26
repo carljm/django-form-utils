@@ -65,27 +65,10 @@ def _get_meta_attr(attrs, attr, default):
             
 def get_fieldsets(bases, attrs):
     """
-    Get the fieldsets definition from the inner Meta class, mapping it
-    on top of the fieldsets from any base classes.
+    Get the fieldsets definition from the inner Meta class.
 
     """
-    fieldsets = _get_meta_attr(attrs, 'fieldsets', ())
-        
-    new_fieldsets = {}
-    order = []
-    
-    for base in bases:
-        for fs in getattr(base, 'base_fieldsets', ()):
-            new_fieldsets[fs[0]] = fs
-            order.append(fs[0])
-
-    for fs in fieldsets:
-        new_fieldsets[fs[0]] = fs
-        if fs[0] not in order:
-            order.append(fs[0])
-    
-    return [new_fieldsets[name] for name in order]
-    
+    return _get_meta_attr(attrs, 'fieldsets', ())
 
 def get_row_attrs(bases, attrs):
     """

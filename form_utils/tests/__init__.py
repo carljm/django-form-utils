@@ -1,7 +1,7 @@
 r"""
 Tests for django-form-utils
 
-Time-stamp: <2008-10-13 13:05:51 carljm __init__.py>
+Time-stamp: <2009-03-26 12:46:16 carljm __init__.py>
 
 
 forms
@@ -28,7 +28,8 @@ Subclass it, and override one of those fieldsets:
 >>> class YourForm(MyForm):
 ...     four = forms.CharField()
 ...     class Meta:
-...         fieldsets = (('main', {'fields': ('four', 'two'), 'legend': ''}),) 
+...         fieldsets = list(MyForm.Meta.fieldsets)
+...         fieldsets[0] = ('main', {'fields': ('four', 'two'), 'legend': ''})
 
 >>> yf = YourForm()
 
@@ -82,8 +83,10 @@ Fieldset('More', ['two'], legend='More', description='Something more')
 >>> class YourModelForm(MyModelForm):
 ...     more = forms.CharField()
 ...     class Meta(MyModelForm.Meta):
-...         fieldsets = (('Some', {'fields': ('additional', 'one')}),
-...                      ('More', {'fields': ('more', 'two')}))
+...         fieldsets = list(MyModelForm.Meta.fieldsets)
+...         fieldsets = fieldsets[:1] + \
+...                     [('More', {'fields': ('more', 'two')}),
+...                      ('Some', {'fields': ('additional', 'one')})]
 
 >>> ymf = YourModelForm()
 

@@ -1,13 +1,13 @@
 """
 forms for django-form-utils
 
-Time-stamp: <2009-02-16 13:17:17 carljm forms.py>
+Time-stamp: <2009-03-26 12:42:39 carljm forms.py>
 
 """
 from copy import deepcopy
 
 from django import forms
-from django.forms.util import flatatt
+from django.forms.util import flatatt, ErrorDict
 from django.utils.safestring import mark_safe
 
 class Fieldset(object):
@@ -22,6 +22,12 @@ class Fieldset(object):
         self.legend = mark_safe(legend)
         self.description = mark_safe(description)
         self.name = name
+
+
+    def _errors(self):
+        return ErrorDict(((k, v) for (k, v) in self.form.errors.iteritems()
+                          if k in [f.name for f in self.boundfields]))
+    errors = property(_errors)
 
     def __iter__(self):
         for bf in self.boundfields:

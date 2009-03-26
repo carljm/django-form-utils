@@ -1,7 +1,7 @@
 r"""
 Tests for django-form-utils
 
-Time-stamp: <2009-03-26 12:46:16 carljm __init__.py>
+Time-stamp: <2009-03-26 12:56:10 carljm __init__.py>
 
 
 forms
@@ -48,6 +48,15 @@ Fieldset('main', ['four', 'two'], legend='', description='')
 Fieldset('Advanced', ['three', 'one'], legend='Advanced', description='')
 <input type="text" name="three" id="id_three" />
 <input type="text" name="one" id="id_one" />
+
+
+If we create a bound form, we can get an ErrorDict for a fieldset:
+
+>>> bf = MyForm(data={'one': 'a'})
+>>> for fs in bf.fieldsets:
+...     fs.errors
+{'two': [u'This field is required.']}
+{'three': [u'This field is required.']}
 
 
 >>> from form_utils.tests.models import FieldsetTestModel

@@ -1,7 +1,7 @@
 """
 forms for django-form-utils
 
-Time-stamp: <2009-03-26 12:42:39 carljm forms.py>
+Time-stamp: <2009-03-26 15:29:38 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -15,7 +15,7 @@ class Fieldset(object):
     An iterable Fieldset with a legend and a set of BoundFields.
 
     """
-    def __init__(self, form, name, boundfields, legend=None, description=''):
+    def __init__(self, form, name, boundfields, legend='', description=''):
         self.form = form
         self.boundfields = boundfields
         if legend is None: legend = name
@@ -74,7 +74,14 @@ def get_fieldsets(bases, attrs):
     Get the fieldsets definition from the inner Meta class.
 
     """
-    return _get_meta_attr(attrs, 'fieldsets', ())
+    fieldsets = _get_meta_attr(attrs, 'fieldsets', None)
+    if fieldsets is None:
+        #grab the fieldsets from the first base class that has them
+        for base in bases:
+            fieldsets = getattr(base, 'base_fieldsets', None)
+            if fieldsets is not None:
+                break
+    return fieldsets or ()
 
 def get_row_attrs(bases, attrs):
     """
@@ -131,9 +138,8 @@ class BetterBaseForm(object):
     the ``fieldsets`` option on a ModelAdmin class in
     ``django.contrib.admin``.
 
-    The first item in each two-tuple is a name for the fieldset (must
-    be unique, so that overriding fieldsets of superclasses works),
-    and the second is a dictionary of fieldset options
+    The first item in each two-tuple is a name for the fieldset, and
+    the second is a dictionary of fieldset options.
 
     Valid fieldset options in the dictionary include:
 
@@ -142,10 +148,8 @@ class BetterBaseForm(object):
 
     ``classes``: A list of extra CSS classes to apply to the fieldset.
 
-    ``legend``: This value, if present, will be the contents of a
-    ``legend`` tag to open the fieldset.  If not present the unique
-    name of the fieldset will be used (so a value of '' for legend
-    must be used if no legend is desired.)
+    ``legend``: This value, if present, will be the contents of a ``legend``
+    tag to open the fieldset.
 
     ``description``: A string of optional extra text to be displayed
     under the ``legend`` of the fieldset.
@@ -156,11 +160,12 @@ class BetterBaseForm(object):
     description attribute, and when iterated over yields its
     ``BoundField``s.
 
-    For backwards compatibility, a ``BetterForm`` or
-    ``BetterModelForm`` can still be iterated over directly to yield
-    all of its ``BoundField``s, regardless of fieldsets.
+    Subclasses of a ``BetterForm`` will inherit their parent's
+    fieldsets unless they define their own.
 
-    For more detailed examples, see the doctests in tests/__init__.py.
+    A ``BetterForm`` or ``BetterModelForm`` can still be iterated over
+    directly to yield all of its ``BoundField``s, regardless of
+    fieldsets.
 
     """
     def __init__(self, *args, **kwargs):

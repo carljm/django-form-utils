@@ -1,7 +1,7 @@
 r"""
 Tests for django-form-utils
 
-Time-stamp: <2009-03-26 12:56:10 carljm __init__.py>
+Time-stamp: <2009-03-26 15:26:11 carljm __init__.py>
 
 
 forms
@@ -22,6 +22,17 @@ Define a ``BetterForm`` with a couple fieldsets:
 ...         fieldsets = (('main', {'fields': ('two',), 'legend': ''}),
 ...                      ('Advanced', {'fields': ('three', 'one')}))
 
+
+Subclass it with no overrides and inherit the fieldsets by default:
+
+>>> class InheritedForm(MyForm):
+...     pass
+
+>>> inf = InheritedForm()
+>>> for fs in inf.fieldsets:
+...     print fs
+Fieldset('main', ['two'], legend='', description='')
+Fieldset('Advanced', ['three', 'one'], legend='Advanced', description='')
 
 Subclass it, and override one of those fieldsets:
 

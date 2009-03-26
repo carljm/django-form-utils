@@ -1,13 +1,13 @@
 """
 templatetags for django-form-utils
 
-Time-stamp: <2008-10-14 14:57:12 carljm form_utils.py>
+Time-stamp: <2009-03-26 12:32:08 carljm form_utils_tags.py>
 
 """
 from django import template
 
 from form_utils.forms import BetterForm, BetterModelForm
-from cjmango.utils import get_template_from_string
+from form_utils.utils import select_template_from_string
 
 register = template.Library()
 
@@ -33,7 +33,7 @@ def render(form, template_name=None):
     default = 'form_utils/form.html'
     if isinstance(form, (BetterForm, BetterModelForm)):
         default = ','.join(['form_utils/better_form.html', default])
-    tpl = get_template_from_string(template_name or default)
+    tpl = select_template_from_string(template_name or default)
 
     return tpl.render(template.Context({'form': form}))
 

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
  
 setup(
     name='django-form-utils',
-    version='0.1.1',
+    version='0.1.2',
     description='Form utilities for Django',
     long_description=open('README.txt').read(),
     author='Carl Meyer',

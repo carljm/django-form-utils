@@ -44,7 +44,7 @@ each fieldset is a two-tuple with a name and an options
 dictionary. Valid fieldset options in the dictionary include:
 
 ``fields``
-  (required): A tuple of field names to display in this fieldset.
+  (required) A tuple of field names to display in this fieldset.
 
 ``classes``
   A list of extra CSS classes to apply to the fieldset.
@@ -59,21 +59,21 @@ dictionary. Valid fieldset options in the dictionary include:
   A string of optional extra text to be displayed
   under the ``legend`` of the fieldset.
 
-When iterated over, the ``fieldsets`` attribute of a ``BetterForm``
-(or ``BetterModelForm``) yields ``Fieldset``s.  Each ``Fieldset`` has
-a ``name`` attribute, a ``legend`` attribute, and a ``description``
-attribute, and when iterated over yields its ``BoundField``s.
+When iterated over, the ``fieldsets`` attribute of a ``BetterForm`` (or
+``BetterModelForm``) yields ``Fieldset`` s.  Each ``Fieldset`` has a ``name``
+attribute, a ``legend`` attribute, and a ``description`` attribute, and when
+iterated over yields its ``BoundField`` s.
 
-For backwards compatibility, a ``BetterForm`` or ``BetterModelForm``
-can still be iterated over directly to yield all of its
-``BoundField``s, regardless of fieldsets.
+For backwards compatibility, a ``BetterForm`` or ``BetterModelForm`` can
+still be iterated over directly to yield all of its ``BoundField`` s,
+regardless of fieldsets.
 
 For more detailed examples, see the doctests in tests/__init__.py.
 
 Rendering
 ---------
 
-A possible template for rendering a ``BetterForm``:
+A possible template for rendering a ``BetterForm``::
 
     {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
     {% for fieldset in form.fieldsets %}

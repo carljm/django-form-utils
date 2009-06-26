@@ -2,8 +2,9 @@ from setuptools import setup, find_packages
  
 setup(
     name='django-form-utils',
-    version='0.1.1dev',
+    version='0.1.1',
     description='Form utilities for Django',
+    long_description=open('README.txt').read(),
     author='Carl Meyer',
     author_email='carl@dirtcircle.com',
     url='http://launchpad.net/django-form-utils',

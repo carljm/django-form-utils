@@ -1,7 +1,7 @@
 """
 widgets for django-form-utils
 
-Time-stamp: <2009-09-02 23:09:23 carljm widgets.py>
+Time-stamp: <2009-09-02 23:14:21 carljm widgets.py>
 
 parts of this code taken from http://www.djangosnippets.org/snippets/934/
  - thanks baumer1122
@@ -112,7 +112,7 @@ class ClearableFileField(forms.MultiValueField):
         super(ClearableFileField, self).__init__(fields, *args, **kwargs)
 
     def compress(self, data_list):
-        if data_list[1]:
+        if data_list[1] and not data_list[0]:
             return FakeEmptyFieldFile()
         return data_list[0]
 

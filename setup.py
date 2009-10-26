@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
  
 setup(
     name='django-form-utils',
-    version='0.1.2',
+    version='0.1.3',
     description='Form utilities for Django',
     long_description=open('README.txt').read(),
     author='Carl Meyer',
@@ -18,7 +18,7 @@ setup(
         'Programming Language :: Python',
         'Framework :: Django',
     ],
-    include_package_data=True,
     zip_safe=False,
-    setup_requires=['setuptools_bzr'],
+    package_data={'form_utils': ['templates/form_utils/*.html']},
+    test_suite='form_utils.tests.runtests.runtests'
 )

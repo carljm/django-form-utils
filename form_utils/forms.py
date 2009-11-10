@@ -1,7 +1,7 @@
 """
 forms for django-form-utils
 
-Time-stamp: <2009-05-30 13:19:24 carljm forms.py>
+Time-stamp: <2009-11-10 12:22:36 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -15,11 +15,12 @@ class Fieldset(object):
     An iterable Fieldset with a legend and a set of BoundFields.
 
     """
-    def __init__(self, form, name, boundfields, legend='', description=''):
+    def __init__(self, form, name, boundfields, legend='', classes='', description=''):
         self.form = form
         self.boundfields = boundfields
         if legend is None: legend = name
         self.legend = mark_safe(legend)
+        self.classes = classes
         self.description = mark_safe(description)
         self.name = name
 
@@ -34,9 +35,9 @@ class Fieldset(object):
             yield _mark_row_attrs(bf, self.form)
 
     def __repr__(self):
-        return "%s('%s', %s, legend='%s', description='%s')" % (
+        return "%s('%s', %s, legend='%s', classes='%s', description='%s')" % (
             self.__class__.__name__, self.name,
-            [f.name for f in self.boundfields], self.legend, self.description)
+            [f.name for f in self.boundfields], self.legend, self.classes, self.description)
 
 class FieldsetCollection(object):
     def __init__(self, form, fieldsets):
@@ -60,6 +61,7 @@ class FieldsetCollection(object):
                            for n in field_names]
             yield Fieldset(self.form, name, boundfields,
                            options.get('legend', None),
+                           ' '.join(options.get('classes', ())),
                            options.get('description', ''))
 
 def _get_meta_attr(attrs, attr, default):
@@ -165,9 +167,10 @@ class BetterBaseForm(object):
 
     When iterated over, the ``fieldsets`` attribute of a
     ``BetterForm`` (or ``BetterModelForm``) yields ``Fieldset``s.
-    Each ``Fieldset`` has a name attribute, a legend attribute, and a
-    description attribute, and when iterated over yields its
-    ``BoundField``s.
+    Each ``Fieldset`` has a ``name`` attribute, a ``legend``
+    attribute, , a ``classes`` attribute (the ``classes`` tuple
+    collapsed into a space-separated string), and a description
+    attribute, and when iterated over yields its ``BoundField``s.
 
     Subclasses of a ``BetterForm`` will inherit their parent's
     fieldsets unless they define their own.

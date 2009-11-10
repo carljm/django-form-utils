@@ -36,7 +36,8 @@ than ``django.forms.Form``), or your modelform class from
         class Meta:
             fieldsets = (('main', {'fields': ('two',), 'legend': ''}),
                          ('Advanced', {'fields': ('three', 'one'),
-                                       'description': 'advanced stuff'}))
+                                       'description': 'advanced stuff',
+                                       'classes': ('advanced', 'collapse'}))
             row_attrs = {'one': {'style': 'display: none'}}
 
 Fieldset definitions are similar to ModelAdmin fieldset definitions:
@@ -47,7 +48,7 @@ dictionary. Valid fieldset options in the dictionary include:
   (required) A tuple of field names to display in this fieldset.
 
 ``classes``
-  A list of extra CSS classes to apply to the fieldset.
+  A tuple/list of extra CSS classes to apply to the fieldset.
 
 ``legend``
   This value, if present, will be the contents of a ``legend``
@@ -59,10 +60,12 @@ dictionary. Valid fieldset options in the dictionary include:
   A string of optional extra text to be displayed
   under the ``legend`` of the fieldset.
 
-When iterated over, the ``fieldsets`` attribute of a ``BetterForm`` (or
-``BetterModelForm``) yields ``Fieldset`` s.  Each ``Fieldset`` has a ``name``
-attribute, a ``legend`` attribute, and a ``description`` attribute, and when
-iterated over yields its ``BoundField`` s.
+When iterated over, the ``fieldsets`` attribute of a ``BetterForm``
+(or ``BetterModelForm``) yields ``Fieldset`` s.  Each ``Fieldset`` has
+a ``name`` attribute, a ``legend`` attribute, a ``classes`` attribute
+(the ``classes`` tuple collapsed into a space-separated string), and a
+``description`` attribute, and when iterated over yields its
+``BoundField`` s.
 
 For backwards compatibility, a ``BetterForm`` or ``BetterModelForm`` can
 still be iterated over directly to yield all of its ``BoundField`` s,
@@ -77,7 +80,7 @@ A possible template for rendering a ``BetterForm``::
 
     {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
     {% for fieldset in form.fieldsets %}
-      <fieldset class="fieldset_{{ fieldset.name }}">
+      <fieldset class="{{ fieldset.classes }}">
       {% if fieldset.legend %}
         <legend>{{ fieldset.legend }}</legend>
       {% endif %}

@@ -1,7 +1,7 @@
 r"""
 Tests for django-form-utils
 
-Time-stamp: <2009-03-26 16:22:02 carljm __init__.py>
+Time-stamp: <2009-11-10 12:24:24 carljm __init__.py>
 
 
 forms
@@ -20,7 +20,8 @@ Define a ``BetterForm`` with a couple fieldsets:
 ...     three = forms.CharField()
 ...     class Meta:
 ...         fieldsets = (('main', {'fields': ('two',), 'legend': ''}),
-...                      ('Advanced', {'fields': ('three', 'one')}))
+...                      ('Advanced', {'fields': ('three', 'one'),
+...                                    'classes': ('advanced',)}))
 
 
 Subclass it with no overrides and inherit the fieldsets by default:
@@ -31,8 +32,8 @@ Subclass it with no overrides and inherit the fieldsets by default:
 >>> inf = InheritedForm()
 >>> for fs in inf.fieldsets:
 ...     print fs
-Fieldset('main', ['two'], legend='', description='')
-Fieldset('Advanced', ['three', 'one'], legend='Advanced', description='')
+Fieldset('main', ['two'], legend='', classes='', description='')
+Fieldset('Advanced', ['three', 'one'], legend='Advanced', classes='advanced', description='')
 
 Subclass it, and override one of those fieldsets:
 
@@ -53,10 +54,10 @@ not overridden by the subclass:
 ...     print fs
 ...     for f in fs:
 ...         print f
-Fieldset('main', ['four', 'two'], legend='', description='')
+Fieldset('main', ['four', 'two'], legend='', classes='', description='')
 <input type="text" name="four" id="id_four" />
 <input type="text" name="two" id="id_two" />
-Fieldset('Advanced', ['three', 'one'], legend='Advanced', description='')
+Fieldset('Advanced', ['three', 'one'], legend='Advanced', classes='advanced', description='')
 <input type="text" name="three" id="id_three" />
 <input type="text" name="one" id="id_one" />
 
@@ -81,9 +82,11 @@ Create and test a ``BetterModelForm`` with a couple fieldsets:
 ...     class Meta:
 ...         model = FieldsetTestModel
 ...         fieldsets = (('main', {'fields': ('one', 'additional', 'blah'),
-...                                'legend': ''}),
+...                                'legend': '',
+...                                'classes': ('main',)}),
 ...                      ('More', {'fields': ('two',),
-...                                'description': 'Something more'}))
+...                                'description': 'Something more',
+...                                'classes': ('more', 'collapse')}))
 
 >>> mmf = MyModelForm()
 
@@ -91,10 +94,10 @@ Create and test a ``BetterModelForm`` with a couple fieldsets:
 ...     print fs
 ...     for f in fs:
 ...         print f
-Fieldset('main', ['one', 'additional'], legend='', description='')
+Fieldset('main', ['one', 'additional'], legend='', classes='main', description='')
 <input type="text" name="one" id="id_one" />
 <input type="text" name="additional" id="id_additional" />
-Fieldset('More', ['two'], legend='More', description='Something more')
+Fieldset('More', ['two'], legend='More', classes='more collapse', description='Something more')
 <input type="text" name="two" id="id_two" />
 
 
@@ -114,13 +117,13 @@ Fieldset('More', ['two'], legend='More', description='Something more')
 ...     print fs
 ...     for f in fs:
 ...         print f
-Fieldset('main', ['one', 'additional'], legend='', description='')
+Fieldset('main', ['one', 'additional'], legend='', classes='main', description='')
 <input type="text" name="one" id="id_one" />
 <input type="text" name="additional" id="id_additional" />
-Fieldset('More', ['more', 'two'], legend='More', description='')
+Fieldset('More', ['more', 'two'], legend='More', classes='', description='')
 <input type="text" name="more" id="id_more" />
 <input type="text" name="two" id="id_two" />
-Fieldset('Some', ['additional', 'one'], legend='Some', description='')
+Fieldset('Some', ['additional', 'one'], legend='Some', classes='', description='')
 <input type="text" name="additional" id="id_additional" />
 <input type="text" name="one" id="id_one" />
 
@@ -137,7 +140,7 @@ fieldset that includes all fields:
 ...     print fs
 ...     for f in fs:
 ...         print f
-Fieldset('main', ['one', 'two'], legend='', description='')
+Fieldset('main', ['one', 'two'], legend='', classes='', description='')
 <input type="text" name="one" id="id_one" />
 <input type="text" name="two" id="id_two" />
 

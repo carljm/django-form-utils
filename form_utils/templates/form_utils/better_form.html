@@ -2,7 +2,7 @@
 
 {% block fields %}
 {% for fieldset in form.fieldsets %}
-<fieldset class="fieldset_{{ fieldset.name }}{% if forloop.first %} first{% endif %}">
+<fieldset class="{{ fieldset.classes }}">
 {% if fieldset.legend %}
 <legend>{{ fieldset.legend }}</legend>
 {% endif %}

@@ -12,7 +12,17 @@ surrounding container (<li>, <tr>, or whatever) of a specific form field.
 Installation
 ============
 
-Once installed on your Python path (see INSTALL.txt), just include
+Install from PyPI with ``easy_install`` or ``pip``::
+
+    pip install django-form-utils
+
+or get the `in-development version`_::
+
+    pip install django-form-utils==dev
+
+.. _in-development version: http://bitbucket.org/carljm/django-form-utils/get/tip.gz#egg=django_form_utils-dev
+
+To use ``django-form-utils`` in your Django project, just include
 ``form_utils`` in your INSTALLED_APPS setting.  ``django-form-utils`` does
 not provide any models, but including it in INSTALLED_APPS makes the
 ``form_utils`` template tag library available.
@@ -113,3 +123,4 @@ By default, it will check whether the form is a ``BetterForm``, and if so render
 The render filter also accepts an optional argument, which is a template name or comma-separated list of template names to use for rendering the form::
 
     {{ form|render:"my_form_stuff/custom_form_template.html" }}
+

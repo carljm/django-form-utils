@@ -1,10 +1,12 @@
 from setuptools import setup, find_packages
 
+long_description = open('README.txt').read() + open('CHANGELOG.txt').read()
+
 setup(
     name='django-form-utils',
     version='0.1.4dev',
     description='Form utilities for Django',
-    long_description=open('README.txt').read(),
+    long_description=long_description,
     author='Carl Meyer',
     author_email='carl@dirtcircle.com',
     url='http://launchpad.net/django-form-utils',

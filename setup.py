@@ -9,7 +9,7 @@ setup(
     long_description=long_description,
     author='Carl Meyer',
     author_email='carl@dirtcircle.com',
-    url='http://launchpad.net/django-form-utils',
+    url='http://bitbucket.org/carljm/django-form-utils/',
     packages=find_packages(),
     classifiers=[
         'Development Status :: 3 - Alpha',

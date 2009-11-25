@@ -1,6 +1,6 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
-long_description = open('README.txt').read() + open('CHANGELOG.txt').read()
+long_description = open('README.txt').read() + open('CHANGES.txt').read()
 
 setup(
     name='django-form-utils',
@@ -10,9 +10,9 @@ setup(
     author='Carl Meyer',
     author_email='carl@dirtcircle.com',
     url='http://bitbucket.org/carljm/django-form-utils/',
-    packages=find_packages(),
+    packages=['form_utils', 'form_utils.templatetags'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
@@ -22,5 +22,5 @@ setup(
     ],
     zip_safe=False,
     package_data={'form_utils': ['templates/form_utils/*.html']},
-    test_suite='form_utils.tests.runtests.runtests'
+    test_suite='tests.runtests.runtests'
 )

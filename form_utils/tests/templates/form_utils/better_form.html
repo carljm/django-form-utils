@@ -1,6 +1,0 @@
-{% for fieldset in form.fieldsets %}
-fieldset {{ fieldset.name }}
-{% with fieldset as fields %}
-{% include "form_utils/fields_as_lis.html" %}
-{% endwith %}
-{% endfor %}

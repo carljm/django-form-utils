@@ -1,7 +1,7 @@
 """
 forms for django-form-utils
 
-Time-stamp: <2009-11-10 12:22:36 carljm forms.py>
+Time-stamp: <2009-11-25 01:30:16 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -192,6 +192,10 @@ class BetterBaseForm(object):
     def __iter__(self):
         for bf in super(BetterBaseForm, self).__iter__():
             yield _mark_row_attrs(bf, self)
+
+    def __getitem__(self, name):
+        bf = super(BetterBaseForm, self).__getitem__(name)
+        return _mark_row_attrs(bf, self)
 
 class BetterForm(BetterBaseForm, forms.Form):
     __metaclass__ = BetterFormMetaclass

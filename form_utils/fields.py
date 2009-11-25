@@ -47,3 +47,5 @@ class ClearableFileField(forms.MultiValueField):
             return FakeEmptyFieldFile()
         return data_list[0]
 
+class ClearableImageField(ClearableFileField):
+    default_file_field_class = forms.ImageField

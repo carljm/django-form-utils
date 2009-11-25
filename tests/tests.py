@@ -364,3 +364,29 @@ class TemplatetagTests(TestCase):
         html = tpl.render(template.Context({'form': form}))
         self.assertEquals([l.strip() for l in html.splitlines() if l.strip()],
                           self.betterform_html)
+
+
+class ImageWidgetTests(TestCase):
+    def test_render(self):
+        """
+        ``ImageWidget`` renders the file input and the image thumb.
+
+        """
+        widget = ImageWidget()
+        html = widget.render('fieldname', 'tiny.png')
+        # test only this much of the html, because the remainder will
+        # vary depending on whether we have sorl-thumbnail
+        self.failUnless(html.startswith(
+                '<input type="file" name="fieldname" value="tiny.png" />'
+                '<br /><img src="/media/tiny'))
+
+    def test_custom_template(self):
+        """
+        ``ImageWidget`` respects a custom template.
+
+        """
+        widget = ImageWidget(template='<div>%(image)s</div>'
+                             '<div>%(input)s</div>')
+        html = widget.render('fieldname', 'tiny.png')
+        self.failUnless(html.startswith('<div><img src="/media/tiny'))
+

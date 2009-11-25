@@ -1,13 +1,14 @@
 """
 widgets for django-form-utils
 
-Time-stamp: <2009-11-24 23:24:06 carljm widgets.py>
+Time-stamp: <2009-11-25 02:54:50 carljm widgets.py>
 
 parts of this code taken from http://www.djangosnippets.org/snippets/934/
  - thanks baumer1122
 
 """
 import os
+import posixpath
 
 from PIL import Image
 
@@ -24,7 +25,7 @@ try:
         return u'<img src="%s" alt="%s" />' % (t.absolute_url, image_path)
 except ImportError:
     def thumbnail(image_path):
-        absolute_url = os.path.join(settings.MEDIA_ROOT, image_path)
+        absolute_url = posixpath.join(settings.MEDIA_URL, image_path)
         return u'<img src="%s" alt="%s" />' % (absolute_url, image_path)
 
 class ImageWidget(forms.FileInput):

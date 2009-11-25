@@ -1,2 +1,3 @@
 dist/*
 django_form_utils.egg-info/*
+tests/media/tiny_png_*

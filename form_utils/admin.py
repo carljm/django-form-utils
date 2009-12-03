@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from form_utils.widgets import ClearableFileField
+from form_utils.fields import ClearableFileField
 
 class ClearableFileFieldsAdmin(admin.ModelAdmin):
     def formfield_for_dbfield(self, db_field, **kwargs):

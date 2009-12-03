@@ -24,7 +24,7 @@ long_description = open('README.txt').read() + open('CHANGES.txt').read()
 
 setup(
     name='django-form-utils',
-    version='0.1.6.post%s' % hgrev,
+    version='0.1.7',
     description='Form utilities for Django',
     long_description=long_description,
     author='Carl Meyer',

@@ -4,6 +4,11 @@ CHANGES
 tip (unreleased)
 ----------------
 
+0.1.7 (2009.12.02)
+------------------
+
+- Fix ClearableFileField import in admin.py.
+
 0.1.6 (2009.11.24)
 ------------------
 

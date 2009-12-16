@@ -42,6 +42,21 @@ You may also want to override the default form rendering templates by
 providing alternate templates at ``templates/form_utils/better_form.html``
 and ``templates/form_utils/form.html``.
 
+Dependencies
+------------
+
+``django-form-utils`` requires `Django`_ 1.0 or later.
+
+`ClearableFileField`_ requires `Django`_ 1.1 or later. 
+
+`ImageWidget`_ requires the `Python Imaging Library`_.
+`sorl-thumbnail`_ is optional, but without it full-size images will be
+displayed instead of thumbnails.
+
+.. _Django: http://www.djangoproject.com/
+.. _sorl-thumbnail: http://pypi.python.org/pypi/sorl-thumbnail
+.. _Python Imaging Library: http://www.pythonware.com/products/pil/
+
 Usage
 =====
 

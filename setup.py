@@ -20,7 +20,7 @@ try:
 except IOError:
     hgrev = ''
     
-long_description = open('README.txt').read() + open('CHANGES.txt').read()
+long_description = open('README.rst').read() + open('CHANGES.rst').read()
 
 setup(
     name='django-form-utils',

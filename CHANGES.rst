@@ -4,6 +4,8 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Added AutoResizeTextarea
+
 0.1.7 (2009.12.02)
 ------------------
 

@@ -41,6 +41,7 @@ setup(
         'Framework :: Django',
     ],
     zip_safe=False,
-    package_data={'form_utils': ['templates/form_utils/*.html']},
+    package_data={'form_utils': ['templates/form_utils/*.html',
+                                 'media/form_utils/js/*.js']},
     test_suite='tests.runtests.runtests'
 )

@@ -20,6 +20,9 @@ This application provides utilities for enhancing Django's form handling:
     3. An ``ImageWidget`` which display a thumbnail of the image
        rather than just the filename.
 
+    4. An ``AutoResizeTextarea`` widget which auto-resizes to
+       accomodate its contents.
+
 Installation
 ============
 
@@ -53,12 +56,19 @@ Dependencies
 `sorl-thumbnail`_ is optional, but without it full-size images will be
 displayed instead of thumbnails.
 
+`AutoResizeTextarea`_ requires `jQuery`_ (by default using a
+Google-served version; see `JQUERY_URL`_).
+
 .. _Django: http://www.djangoproject.com/
 .. _sorl-thumbnail: http://pypi.python.org/pypi/sorl-thumbnail
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
+.. _jQuery: http://www.jquery.com/
 
 Usage
 =====
+
+BetterForm
+----------
 
 Simply inherit your form class from ``form_utils.forms.BetterForm`` (rather
 than ``django.forms.Form``), or your modelform class from
@@ -77,7 +87,7 @@ than ``django.forms.Form``), or your modelform class from
             row_attrs = {'one': {'style': 'display: none'}}
 
 fieldsets
----------
+'''''''''
 
 Fieldset definitions are similar to ModelAdmin fieldset definitions:
 each fieldset is a two-tuple with a name and an options
@@ -113,7 +123,7 @@ regardless of fieldsets.
 For more detailed examples, see the tests in ``tests/tests.py``.
 
 row_attrs
----------
+'''''''''
 
 The row_attrs declaration is a dictionary mapping field names to
 dictionaries of attribute/value pairs.  The attribute/value
@@ -127,7 +137,7 @@ added to the row_attrs of each ``BoundField``, depending on whether
 the field is required.
 
 Rendering
----------
+'''''''''
 
 A possible template for rendering a ``BetterForm``::
 
@@ -173,9 +183,6 @@ template name or comma-separated list of template names to use for
 rendering the form::
 
     {{ form|render:"my_form_stuff/custom_form_template.html" }}
-
-Fields and Widgets
-==================
 
 ClearableFileField
 ------------------
@@ -269,4 +276,56 @@ using ``formfield_overrides``::
         formfield_overrides = { models.ImageField: {'widget': ImageWidget}}
 
 .. _sorl-thumbnail: http://pypi.python.org/pypi/sorl-thumbnail
+
+AutoResizeTextarea
+------------------
+
+Just import the widget and assign it to a form field::
+
+    from django import forms
+    from form_utils.widgets import AutoResizeTextarea
+    
+    class MyForm(forms.Form):
+        description = forms.CharField(widget=AutoResizeTextarea())
+
+Or use it in ``formfield_overrides`` in your ``ModelAdmin`` subclass::
+
+    from django import forms
+    from django.contrib import admin
+    from form_utils.widgets import AutoResizeTextarea
+    
+    class MyModelAdmin(admin.ModelAdmin):
+        formfield_overrides = {forms.CharField: {'widget': AutoResizeTextarea()}}
+
+There is also an ``InlineAutoResizeTextarea``, which simply provides
+smaller default sizes suitable for use in a tabular inline.
+
+Settings
+========
+
+FORM_UTILS_MEDIA_URL
+--------------------
+
+Some projects separate user-uploaded media at ``MEDIA_URL`` from
+static assets. If you keep static assets at a URL other than
+``MEDIA_URL``, just set ``FORM_UTILS_MEDIA_URL`` to that URL, and make
+sure the contents of the ``form_utils/media/form_utils`` directory are
+available at ``FORM_UTILS_MEDIA_URL/form_utils/``.
+
+
+JQUERY_URL
+----------
+
+`AutoResizeTextarea`_ requires the jQuery Javascript library.  By
+default, ``django-form-utils`` links to the most recent minor version
+of jQuery 1.4 available at ajax.googleapis.com (via the URL
+``http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js``).
+If you wish to use a different version of jQuery, or host it yourself,
+set the JQUERY_URL setting.  For example::
+
+    JQUERY_URL = 'jquery.min.js'
+
+This will use the jQuery available at MEDIA_URL/jquery.min.js. Note
+that a relative ``JQUERY_URL`` is always relative to ``MEDIA_URL``, it
+does not use ``FORM_UTILS_MEDIA_URL``.
 

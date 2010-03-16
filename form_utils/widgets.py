@@ -10,8 +10,6 @@ parts of this code taken from http://www.djangosnippets.org/snippets/934/
 import os
 import posixpath
 
-from PIL import Image
-
 from django import forms
 from django.conf import settings
 from django.utils.functional import curry
@@ -39,6 +37,7 @@ class ImageWidget(forms.FileInput):
         super(ImageWidget, self).__init__(attrs)
     
     def render(self, name, value, attrs=None):
+        from PIL import Image
         input_html = super(forms.FileInput, self).render(name, value, attrs)
         file_name = str(value)
         file_path = os.path.join(settings.MEDIA_ROOT, file_name)

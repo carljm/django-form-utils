@@ -3,6 +3,8 @@ CHANGES
 
 tip (unreleased)
 ----------------
+ 
+- Restrict PIL import to ImageWidget only
 
 - Added AutoResizeTextarea
 

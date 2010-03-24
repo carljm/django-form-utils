@@ -240,6 +240,17 @@ class BetterFormTests(TestCase):
         self.assertEquals([field.name for field in form],
                           ['name', 'position', 'reference'])
 
+    def test_getitem_fields(self):
+        """
+        We can use dictionary style look up of fields in a fieldset using the
+        name as the key.
+
+        """
+        form = ApplicationForm()
+        fieldset = form.fieldsets['main']
+        self.assertEquals(fieldset.name, 'main')
+        self.assertEquals(len(fieldset.boundfields), 2)
+
     def test_row_attrs_by_name(self):
         """
         Fields of a ``BetterForm`` accessed by name have ``row_attrs``

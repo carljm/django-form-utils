@@ -43,11 +43,26 @@ class FieldsetCollection(object):
     def __init__(self, form, fieldsets):
         self.form = form
         self.fieldsets = fieldsets
+        self._cached_fieldsets = []
 
     def __len__(self):
         return len(self.fieldsets) or 1
 
     def __iter__(self):
+        if not self._cached_fieldsets:
+            self._gather_fieldsets()
+        for field in self._cached_fieldsets:
+            yield field
+
+    def __getitem__(self, key):
+        if not self._cached_fieldsets:
+            self._gather_fieldsets()
+        for field in self._cached_fieldsets:
+            if field.name == key:
+                return field
+        raise KeyError
+
+    def _gather_fieldsets(self):
         if not self.fieldsets:
             self.fieldsets = (('main', {'fields': self.form.fields.keys(),
                                         'legend': ''}),)
@@ -59,10 +74,10 @@ class FieldsetCollection(object):
                 raise ValueError("Fieldset definition must include 'fields' option." )
             boundfields = [forms.forms.BoundField(self.form, self.form.fields[n], n)
                            for n in field_names]
-            yield Fieldset(self.form, name, boundfields,
-                           options.get('legend', None),
-                           ' '.join(options.get('classes', ())),
-                           options.get('description', ''))
+            self._cached_fieldsets.append(Fieldset(self.form, name,
+                boundfields, options.get('legend', None), 
+                ' '.join(options.get('classes', ())),
+                options.get('description', '')))
 
 def _get_meta_attr(attrs, attr, default):
     try:
@@ -183,11 +198,15 @@ class BetterBaseForm(object):
     def __init__(self, *args, **kwargs):
         self._fieldsets = deepcopy(self.base_fieldsets)
         self._row_attrs = deepcopy(self.base_row_attrs)
+        self._fieldset_collection = None
         super(BetterBaseForm, self).__init__(*args, **kwargs)
 
     @property
     def fieldsets(self):
-        return FieldsetCollection(self, self._fieldsets)
+        if not self._fieldset_collection:
+            self._fieldset_collection = FieldsetCollection(self,
+                                                           self._fieldsets)
+        return self._fieldset_collection
 
     def __iter__(self):
         for bf in super(BetterBaseForm, self).__iter__():

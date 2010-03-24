@@ -4,6 +4,8 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Updated to allow ``__getitem__`` access to fieldsets.
+
 0.1.8 (2010.03.16)
 ------------------
  

@@ -167,6 +167,13 @@ A possible template for rendering a ``BetterForm``::
     {% endfor %}
 
 
+One can also access the fieldset directly if any special casing needs to be
+done, e.g.::
+
+    {% for field in form.fieldsets.main %}
+        ...
+    {% endfor %}
+
 ``django-form-utils`` also provides a convenience template filter,
 ``render``.  It is used like this::
 

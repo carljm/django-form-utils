@@ -1,7 +1,7 @@
 """
 forms for django-form-utils
 
-Time-stamp: <2010-04-28 02:37:06 carljm forms.py>
+Time-stamp: <2010-04-28 02:57:16 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -86,6 +86,13 @@ def _get_meta_attr(attrs, attr, default):
         ret = default
     return ret
             
+def _set_meta_attr(attrs, attr, value):
+    try:
+        setattr(attrs['Meta'], attr, value)
+        return True
+    except KeyError:
+        return False
+            
 def get_fieldsets(bases, attrs):
     """
     Get the fieldsets definition from the inner Meta class.
@@ -98,14 +105,23 @@ def get_fieldsets(bases, attrs):
             fieldsets = getattr(base, 'base_fieldsets', None)
             if fieldsets is not None:
                 break
-    fieldsets = fieldsets or ()
-    # try looping through fieldsets to catch malformed setting early
-    try:
-        for name, option in fieldsets:
-            pass
-    except TypeError:
-        raise ValueError('"fieldsets" must be an iterable of two-tuples')
+    fieldsets = fieldsets or []
     return fieldsets
+
+def get_fields_from_fieldsets(fieldsets):
+    """
+    Get a list of all fields included in a fieldsets definition.
+
+    """
+    fields = []
+    try:
+        for name, options in fieldsets:
+            fields.extend(options['fields'])
+    except (TypeError, KeyError):
+        raise ValueError('"fieldsets" must be an iterable of two-tuples, '
+                         'and the second tuple must be a dictionary '
+                         'with a "fields" key')
+    return fields
 
 def get_row_attrs(bases, attrs):
     """
@@ -130,6 +146,10 @@ def _mark_row_attrs(bf, form):
 class BetterFormBaseMetaclass(type):
     def __new__(cls, name, bases, attrs):
         attrs['base_fieldsets'] = get_fieldsets(bases, attrs)
+        fields = get_fields_from_fieldsets(attrs['base_fieldsets'])
+        if (_get_meta_attr(attrs, 'fields', None) is None and
+            _get_meta_attr(attrs, 'exclude', None) is None):
+            _set_meta_attr(attrs, 'fields', fields)
         attrs['base_row_attrs'] = get_row_attrs(bases, attrs)
         new_class = super(BetterFormBaseMetaclass,
                           cls).__new__(cls, name, bases, attrs)

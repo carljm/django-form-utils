@@ -120,6 +120,16 @@ For backwards compatibility, a ``BetterForm`` or ``BetterModelForm`` can
 still be iterated over directly to yield all of its ``BoundField`` s,
 regardless of fieldsets.
 
+If you set ``fieldsets`` on a ``BetterModelForm`` and don't set either
+the ``fields`` or ``exclude`` options on that form class,
+``BetterModelForm`` will set ``fields`` to be the list of all fields
+present in your ``fieldsets`` definition. This avoids problems with
+forms that can't validate because not all fields are listed in a
+``fieldset``. If you manually set either ``fields`` or ``exclude``,
+``BetterModelForm`` assumes you know what you're doing and doesn't
+touch those definitions, even if they don't match the fields listed in
+your fieldsets.
+
 For more detailed examples, see the tests in ``tests/tests.py``.
 
 row_attrs

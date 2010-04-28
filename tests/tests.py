@@ -87,6 +87,38 @@ class PersonForm(BetterModelForm):
                      (None, {'fields': ['title']})]
 
 
+class PartialPersonForm(BetterModelForm):
+    """
+    A ``BetterModelForm`` whose fieldsets don't contain all fields
+    from the model.
+    
+    """
+    class Meta:
+        model = Person
+        fieldsets = [('main', {'fields': ['name']})]
+
+class ManualPartialPersonForm(BetterModelForm):
+    """
+    A ``BetterModelForm`` whose fieldsets don't contain all fields
+    from the model, but we set ``fields`` manually.
+    
+    """
+    class Meta:
+        model = Person
+        fieldsets = [('main', {'fields': ['name']})]
+        fields = ['name', 'age']
+        
+class ExcludePartialPersonForm(BetterModelForm):
+    """
+    A ``BetterModelForm`` whose fieldsets don't contain all fields
+    from the model, but we set ``exclude`` manually.
+    
+    """
+    class Meta:
+        model = Person
+        fieldsets = [('main', {'fields': ['name']})]
+        exclude = ['age']
+        
 class AcrobaticPersonForm(PersonForm):
     """
     A ``BetterModelForm`` that inherits from another and overrides one
@@ -296,7 +328,7 @@ class BetterFormTests(TestCase):
     def test_friendly_typo_error(self):
         """
         If we define a single fieldset and leave off the trailing , in
-        our tuple, we get a friendly error.
+        a tuple, we get a friendly error.
 
         """
         def _define_fieldsets_with_missing_comma():
@@ -308,6 +340,30 @@ class BetterFormTests(TestCase):
         # can't test the message here, but it would be TypeError otherwise
         self.assertRaises(ValueError,
                           _define_fieldsets_with_missing_comma)
+
+    def test_modelform_fields(self):
+        """
+        The ``fields`` Meta option of a ModelForm is automatically
+        populated with the fields present in a fieldsets definition.
+
+        """
+        self.assertEquals(PartialPersonForm._meta.fields, ['name'])
+
+    def test_modelform_manual_fields(self):
+        """
+        The ``fields`` Meta option of a ModelForm is not automatically
+        populated if it's set manually.
+
+        """
+        self.assertEquals(ManualPartialPersonForm._meta.fields, ['name', 'age'])
+
+    def test_modelform_fields(self):
+        """
+        The ``fields`` Meta option of a ModelForm is not automatically
+        populated if ``exclude`` is set manually.
+
+        """
+        self.assertEquals(ExcludePartialPersonForm._meta.fields, None)
 
 
 class BoringForm(forms.Form):

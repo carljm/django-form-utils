@@ -4,6 +4,10 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Automatically set ``fields`` on ``BetterModelForm`` to list of fields
+  present in ``fieldsets``, if ``fields`` or ``exclude`` are not set
+  manually.
+
 - Updated to allow ``__getitem__`` access to fieldsets.
 
 0.1.8 (2010.03.16)

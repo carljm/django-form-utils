@@ -80,10 +80,10 @@ than ``django.forms.Form``), or your modelform class from
         two = forms.CharField()
         three = forms.CharField()
         class Meta:
-            fieldsets = (('main', {'fields': ('two',), 'legend': ''}),
-                         ('Advanced', {'fields': ('three', 'one'),
+            fieldsets = [('main', {'fields': ['two'], 'legend': ''}),
+                         ('Advanced', {'fields': ['three', 'one'],
                                        'description': 'advanced stuff',
-                                       'classes': ('advanced', 'collapse'}))
+                                       'classes': ['advanced', 'collapse']})]
             row_attrs = {'one': {'style': 'display: none'}}
 
 fieldsets

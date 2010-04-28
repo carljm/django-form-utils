@@ -1,7 +1,7 @@
 """
 forms for django-form-utils
 
-Time-stamp: <2009-11-25 01:30:16 carljm forms.py>
+Time-stamp: <2010-04-28 02:37:06 carljm forms.py>
 
 """
 from copy import deepcopy
@@ -19,7 +19,7 @@ class Fieldset(object):
         self.form = form
         self.boundfields = boundfields
         if legend is None: legend = name
-        self.legend = mark_safe(legend)
+        self.legend = legend and mark_safe(legend)
         self.classes = classes
         self.description = mark_safe(description)
         self.name = name

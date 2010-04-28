@@ -78,12 +78,14 @@ class PersonForm(BetterModelForm):
     title = forms.CharField()
     class Meta:
         model = Person
-        fieldsets = (('main', {'fields': ('name', 'title'),
+        fieldsets = [('main', {'fields': ['name'],
                                'legend': '',
-                               'classes': ('main',)}),
-                     ('More', {'fields': ('age',),
+                               'classes': ['main']}),
+                     ('More', {'fields': ['age'],
                                'description': 'Extra information',
-                               'classes': ('more', 'collapse')}))
+                               'classes': ['more', 'collapse']}),
+                     (None, {'fields': ['title']})]
+
 
 class AcrobaticPersonForm(PersonForm):
     """
@@ -164,7 +166,7 @@ class BetterFormTests(TestCase):
                     ],
         PersonForm:
             [
-                    (['name', 'title'],
+                    (['name'],
                      {
                                 'name': 'main',
                                 'legend': '',
@@ -178,10 +180,17 @@ class BetterFormTests(TestCase):
                                 'description': 'Extra information',
                                 'classes': 'more collapse'
                                 }),
+                    (['title'],
+                    {
+                                'name': None,
+                                'legend': None,
+                                'description': '',
+                                'classes': ''
+                                }),
                     ],
         AcrobaticPersonForm:
             [
-                    (['name', 'title'],
+                    (['name'],
                      {
                                 'name': 'main',
                                 'legend': '',

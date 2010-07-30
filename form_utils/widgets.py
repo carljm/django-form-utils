@@ -1,8 +1,6 @@
 """
 widgets for django-form-utils
 
-Time-stamp: <2010-03-05 15:03:36 carljm widgets.py>
-
 parts of this code taken from http://www.djangosnippets.org/snippets/934/
  - thanks baumer1122
 
@@ -63,9 +61,15 @@ class ClearableFileInput(forms.MultiWidget):
             widgets=[file_widget, forms.CheckboxInput()],
             attrs=attrs)
 
+    def render(self, name, value, attrs=None):
+        if isinstance(value, list):
+            self.value = value[0]
+        else:
+            self.value = value
+        return super(ClearableFileInput, self).render(name, value, attrs)
+        
     def decompress(self, value):
         # the clear checkbox is never initially checked
-        self.value = value
         return [value, None]
 
     def format_output(self, rendered_widgets):

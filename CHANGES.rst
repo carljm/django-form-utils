@@ -4,6 +4,8 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Fix error redisplaying bound form with ClearableFileField.
+
 - Automatically set ``fields`` on ``BetterModelForm`` to list of fields
   present in ``fieldsets``, if ``fields`` or ``exclude`` are not set
   manually.

@@ -536,6 +536,14 @@ class ClearableFileInputTests(TestCase):
 
 class ClearableFileFieldTests(TestCase):
     upload = SimpleUploadedFile('something.txt', 'Something')
+
+    def test_bound_redisplay(self):
+        class TestForm(forms.Form):
+            f = ClearableFileField()
+        form = TestForm(files={'f_0': self.upload})
+        self.assertEquals(unicode(form['f']),
+                          u'<input type="file" name="f_0" id="id_f_0" />'
+                          u' Clear: <input type="checkbox" name="f_1" id="id_f_1" />')
     
     def test_not_cleared(self):
         """

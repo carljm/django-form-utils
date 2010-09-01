@@ -4,9 +4,7 @@
 {% else %}
 <li{{ field.row_attrs }}>
   {{ field.errors }}
-  <label for="{{ field.auto_id }}">
-  {{ field.label }}
-  </label>
+  {{ field.label_tag }}
   {{ field }}
 </li>
 {% endif %}

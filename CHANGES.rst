@@ -4,6 +4,8 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Fix default templates' rendering of labels for radio/checkbox inputs.
+
 - Fix error redisplaying bound form with ClearableFileField.
 
 - Automatically set ``fields`` on ``BetterModelForm`` to list of fields

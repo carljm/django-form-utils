@@ -1,6 +1,7 @@
 from django import forms
 from django import template
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.models.fields.files import FieldFile, ImageFieldFile, FileField, ImageField
 from django.test import TestCase
 
 from form_utils.forms import BetterForm, BetterModelForm
@@ -91,7 +92,7 @@ class PartialPersonForm(BetterModelForm):
     """
     A ``BetterModelForm`` whose fieldsets don't contain all fields
     from the model.
-    
+
     """
     class Meta:
         model = Person
@@ -101,24 +102,24 @@ class ManualPartialPersonForm(BetterModelForm):
     """
     A ``BetterModelForm`` whose fieldsets don't contain all fields
     from the model, but we set ``fields`` manually.
-    
+
     """
     class Meta:
         model = Person
         fieldsets = [('main', {'fields': ['name']})]
         fields = ['name', 'age']
-        
+
 class ExcludePartialPersonForm(BetterModelForm):
     """
     A ``BetterModelForm`` whose fieldsets don't contain all fields
     from the model, but we set ``exclude`` manually.
-    
+
     """
     class Meta:
         model = Person
         fieldsets = [('main', {'fields': ['name']})]
         exclude = ['age']
-        
+
 class AcrobaticPersonForm(PersonForm):
     """
     A ``BetterModelForm`` that inherits from another and overrides one
@@ -132,7 +133,7 @@ class AcrobaticPersonForm(PersonForm):
         fieldsets = fieldsets[:1] + \
                      [('Acrobatics', {'fields': ('age', 'speed', 'agility')})]
 
-                     
+
 class BetterFormTests(TestCase):
     fieldset_target_data = {
         ApplicationForm:
@@ -238,7 +239,7 @@ class BetterFormTests(TestCase):
                                 }),
                     ],
         }
-        
+
     def test_iterate_fieldsets(self):
         """
         Test the definition and inheritance of fieldsets, by matching
@@ -258,7 +259,7 @@ class BetterFormTests(TestCase):
                 # verify fieldset has correct attributes
                 for attr, val in target_data[1].items():
                     self.assertEquals(getattr(fs, attr), val)
-        
+
     def test_fieldset_errors(self):
         """
         We can access the ``errors`` attribute of a bound form and get
@@ -369,7 +370,7 @@ class BetterFormTests(TestCase):
 class BoringForm(forms.Form):
     boredom = forms.IntegerField()
     excitement = forms.IntegerField()
-                          
+
 class TemplatetagTests(TestCase):
     boring_form_html = [
         u'<fieldset class="fieldset_main">',
@@ -385,7 +386,7 @@ class TemplatetagTests(TestCase):
         u'</ul>',
         u'</fieldset>',
         ]
-        
+
     def test_render_form(self):
         """
         A plain ``forms.Form`` renders as a list of fields.
@@ -440,12 +441,21 @@ class ImageWidgetTests(TestCase):
 
         """
         widget = ImageWidget()
-        html = widget.render('fieldname', 'tiny.png')
+        html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
         # test only this much of the html, because the remainder will
         # vary depending on whether we have sorl-thumbnail
         self.failUnless(html.startswith(
                 '<input type="file" name="fieldname" value="tiny.png" />'
                 '<br /><img src="/media/tiny'))
+
+    def test_render_nonimage(self):
+        """
+        ``ImageWidget`` renders the file input only, if given a non-image.
+
+        """
+        widget = ImageWidget()
+        html = widget.render('fieldname', FieldFile(None, FileField(), 'something.txt'))
+        self.assertEquals(html, '<input type="file" name="fieldname" value="something.txt" />')
 
     def test_custom_template(self):
         """
@@ -454,7 +464,7 @@ class ImageWidgetTests(TestCase):
         """
         widget = ImageWidget(template='<div>%(image)s</div>'
                              '<div>%(input)s</div>')
-        html = widget.render('fieldname', 'tiny.png')
+        html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
         self.failUnless(html.startswith('<div><img src="/media/tiny'))
 
 
@@ -478,7 +488,7 @@ class ClearableFileInputTests(TestCase):
 
         """
         widget = ClearableFileInput(file_widget=ImageWidget())
-        html = widget.render('fieldname', 'tiny.png')
+        html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
         self.failUnless(html.startswith(
                 '<input type="file" name="fieldname_0" value="tiny.png" />'
                 '<br /><img src="/media/tiny'))
@@ -492,7 +502,7 @@ class ClearableFileInputTests(TestCase):
         class ClearableImageWidget(ClearableFileInput):
             default_file_widget_class = ImageWidget
         widget = ClearableImageWidget()
-        html = widget.render('fieldname', 'tiny.png')
+        html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
         self.failUnless(html.startswith(
                 '<input type="file" name="fieldname_0" value="tiny.png" />'
                 '<br /><img src="/media/tiny'))
@@ -503,12 +513,12 @@ class ClearableFileInputTests(TestCase):
 
         """
         widget = ClearableFileInput(template='Clear: %(checkbox)s %(input)s')
-        html = widget.render('fieldname', 'tiny.png')
+        html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
         self.assertEquals(html,
                           'Clear: '
                           '<input type="checkbox" name="fieldname_1" /> '
                           '<input type="file" name="fieldname_0" />')
-                          
+
     def test_custom_template_via_subclass(self):
         """
         Template can also be customized by subclassing.
@@ -522,7 +532,7 @@ class ClearableFileInputTests(TestCase):
                           'Clear: '
                           '<input type="checkbox" name="fieldname_1" /> '
                           '<input type="file" name="fieldname_0" />')
-                          
+
 
 class ClearableFileFieldTests(TestCase):
     upload = SimpleUploadedFile('something.txt', 'Something')
@@ -534,7 +544,7 @@ class ClearableFileFieldTests(TestCase):
         self.assertEquals(unicode(form['f']),
                           u'<input type="file" name="f_0" id="id_f_0" />'
                           u' Clear: <input type="checkbox" name="f_1" id="id_f_1" />')
-    
+
     def test_not_cleared(self):
         """
         If the clear checkbox is not checked, the ``FileField`` data
@@ -637,5 +647,3 @@ class ClearableFileFieldTests(TestCase):
             widget = ClearableImageWidget
         field = ClearableImageWidgetField()
         self.failUnless(isinstance(field.widget, ClearableImageWidget))
-
-        

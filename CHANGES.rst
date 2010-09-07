@@ -4,6 +4,9 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Make ImageWidget image-detection backend-friendly, no direct use of
+  PIL. Fixes issue #7.
+
 - Fix default templates' rendering of labels for radio/checkbox inputs.
 
 - Fix error redisplaying bound form with ClearableFileField.
@@ -16,7 +19,7 @@ tip (unreleased)
 
 0.1.8 (2010.03.16)
 ------------------
- 
+
 - Restrict PIL import to ImageWidget only
 
 - Added AutoResizeTextarea

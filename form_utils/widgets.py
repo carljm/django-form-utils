@@ -18,26 +18,28 @@ from form_utils.settings import JQUERY_URL, FORM_UTILS_MEDIA_URL
 
 try:
     from sorl.thumbnail.main import DjangoThumbnail
-    def thumbnail(image_path):
-        t = DjangoThumbnail(relative_source=image_path, requested_size=(200,200))
+    def thumbnail(image_path, width, height):
+        t = DjangoThumbnail(relative_source=image_path, requested_size=(width,height))
         return u'<img src="%s" alt="%s" />' % (t.absolute_url, image_path)
 except ImportError:
-    def thumbnail(image_path):
+    def thumbnail(image_path, width, height):
         absolute_url = posixpath.join(settings.MEDIA_URL, image_path)
         return u'<img src="%s" alt="%s" />' % (absolute_url, image_path)
 
 class ImageWidget(forms.FileInput):
     template = '%(input)s<br />%(image)s'
 
-    def __init__(self, attrs=None, template=None):
+    def __init__(self, attrs=None, template=None, width=200, height=200):
         if template is not None:
             self.template = template
+        self.width = width
+        self.height = height
         super(ImageWidget, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
         input_html = super(forms.FileInput, self).render(name, value, attrs)
         if hasattr(value, 'width') and hasattr(value, 'height'):
-            image_html = thumbnail(value.name)
+            image_html = thumbnail(value.name, self.width, self.height)
             output = self.template % {'input': input_html,
                                       'image': image_html}
         else:

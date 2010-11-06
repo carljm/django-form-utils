@@ -4,6 +4,8 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Add width and height arguments to ImageWidget.
+
 - Make ImageWidget image-detection backend-friendly, no direct use of
   PIL. Fixes issue #7.
 

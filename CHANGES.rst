@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-tip (unreleased)
-----------------
+0.2.0 (2011.01.28)
+------------------
 
 - Add width and height arguments to ImageWidget.
 

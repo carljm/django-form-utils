@@ -22,9 +22,16 @@ try:
         t = DjangoThumbnail(relative_source=image_path, requested_size=(width,height))
         return u'<img src="%s" alt="%s" />' % (t.absolute_url, image_path)
 except ImportError:
-    def thumbnail(image_path, width, height):
-        absolute_url = posixpath.join(settings.MEDIA_URL, image_path)
-        return u'<img src="%s" alt="%s" />' % (absolute_url, image_path)
+    try:
+        from easy_thumbnails.files import get_thumbnailer
+        def thumbnail(image_path, width, height):
+            thumbnail_options = dict(size=(width, height), crop=True)
+            thumbnail = get_thumbnailer(image_path).get_thumbnail(thumbnail_options)
+            return u'<img src="%s" alt="%s" />' % (thumbnail.url, image_path)
+    except ImportError:
+        def thumbnail(image_path, width, height):
+            absolute_url = posixpath.join(settings.MEDIA_URL, image_path)
+            return u'<img src="%s" alt="%s" />' % (absolute_url, image_path)
 
 class ImageWidget(forms.FileInput):
     template = '%(input)s<br />%(image)s'

@@ -136,6 +136,8 @@ def _mark_row_attrs(bf, form):
         req_class = 'required'
     else:
         req_class = 'optional'
+    if bf.errors:
+        req_class += ' error'
     if 'class' in row_attrs:
         row_attrs['class'] = row_attrs['class'] + ' ' + req_class
     else:

@@ -3,3 +3,4 @@
 ^tests/media/tiny_png
 ^HGREV$
 ^.coverage$
+^.tox/

@@ -5,14 +5,11 @@ parts of this code taken from http://www.djangosnippets.org/snippets/934/
  - thanks baumer1122
 
 """
-import os
 import posixpath
 
 from django import forms
 from django.conf import settings
-from django.utils.functional import curry
 from django.utils.safestring import mark_safe
-from django.core.files.uploadedfile import SimpleUploadedFile as UploadedFile
 
 from form_utils.settings import JQUERY_URL, FORM_UTILS_MEDIA_URL
 

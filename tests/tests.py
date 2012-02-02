@@ -254,15 +254,15 @@ class BetterFormTests(TestCase):
         for form_class, targets in self.fieldset_target_data.items():
             form = form_class()
             # verify len(form.fieldsets) tells us the truth
-            self.assertEquals(len(form.fieldsets), len(targets))
+            self.assertEqual(len(form.fieldsets), len(targets))
             for i, fs in enumerate(form.fieldsets):
                 target_data = targets[i]
                 # verify fieldset contains correct fields
-                self.assertEquals([f.name for f in fs],
+                self.assertEqual([f.name for f in fs],
                                   target_data[0])
                 # verify fieldset has correct attributes
                 for attr, val in target_data[1].items():
-                    self.assertEquals(getattr(fs, attr), val)
+                    self.assertEqual(getattr(fs, attr), val)
 
     def test_fieldset_errors(self):
         """
@@ -272,7 +272,7 @@ class BetterFormTests(TestCase):
         """
         form = ApplicationForm(data={'name': 'John Doe',
                                      'reference': 'Jane Doe'})
-        self.assertEquals([fs.errors for fs in form.fieldsets],
+        self.assertEqual([fs.errors for fs in form.fieldsets],
                           [{'position': [u'This field is required.']}, {}])
 
     def test_iterate_fields(self):
@@ -283,7 +283,7 @@ class BetterFormTests(TestCase):
 
         """
         form = ApplicationForm()
-        self.assertEquals([field.name for field in form],
+        self.assertEqual([field.name for field in form],
                           ['name', 'position', 'reference'])
 
     def test_getitem_fields(self):
@@ -294,8 +294,8 @@ class BetterFormTests(TestCase):
         """
         form = ApplicationForm()
         fieldset = form.fieldsets['main']
-        self.assertEquals(fieldset.name, 'main')
-        self.assertEquals(len(fieldset.boundfields), 2)
+        self.assertEqual(fieldset.name, 'main')
+        self.assertEqual(len(fieldset.boundfields), 2)
 
     def test_row_attrs_by_name(self):
         """
@@ -304,7 +304,7 @@ class BetterFormTests(TestCase):
 
         """
         form = HoneypotForm()
-        self.assertEquals(form['honeypot'].row_attrs,
+        self.assertEqual(form['honeypot'].row_attrs,
                           u' style="display: none" class="required"')
 
     def test_row_attrs_by_iteration(self):
@@ -315,7 +315,7 @@ class BetterFormTests(TestCase):
         """
         form = HoneypotForm()
         honeypot = [field for field in form if field.name=='honeypot'][0]
-        self.assertEquals(honeypot.row_attrs,
+        self.assertEqual(honeypot.row_attrs,
                           u' style="display: none" class="required"')
 
     def test_row_attrs_by_fieldset_iteration(self):
@@ -327,7 +327,7 @@ class BetterFormTests(TestCase):
         form = HoneypotForm()
         fieldset = [fs for fs in form.fieldsets][0]
         honeypot = [field for field in fieldset if field.name=='honeypot'][0]
-        self.assertEquals(honeypot.row_attrs,
+        self.assertEqual(honeypot.row_attrs,
                           u' style="display: none" class="required"')
 
     def test_row_attrs_error_class(self):
@@ -362,7 +362,7 @@ class BetterFormTests(TestCase):
         populated with the fields present in a fieldsets definition.
 
         """
-        self.assertEquals(PartialPersonForm._meta.fields, ['name'])
+        self.assertEqual(PartialPersonForm._meta.fields, ['name'])
 
     def test_modelform_manual_fields(self):
         """
@@ -370,7 +370,7 @@ class BetterFormTests(TestCase):
         populated if it's set manually.
 
         """
-        self.assertEquals(ManualPartialPersonForm._meta.fields, ['name', 'age'])
+        self.assertEqual(ManualPartialPersonForm._meta.fields, ['name', 'age'])
 
     def test_modelform_fields(self):
         """
@@ -378,7 +378,7 @@ class BetterFormTests(TestCase):
         populated if ``exclude`` is set manually.
 
         """
-        self.assertEquals(ExcludePartialPersonForm._meta.fields, None)
+        self.assertEqual(ExcludePartialPersonForm._meta.fields, None)
 
 
 class BoringForm(forms.Form):
@@ -409,7 +409,7 @@ class TemplatetagTests(TestCase):
         form = BoringForm()
         tpl = template.Template('{% load form_utils_tags %}{{ form|render }}')
         html = tpl.render(template.Context({'form': form}))
-        self.assertEquals([l.strip() for l in html.splitlines() if l.strip()],
+        self.assertEqual([l.strip() for l in html.splitlines() if l.strip()],
                           self.boring_form_html)
 
     betterform_html = [
@@ -444,7 +444,7 @@ class TemplatetagTests(TestCase):
         form = ApplicationForm()
         tpl = template.Template('{% load form_utils_tags %}{{ form|render }}')
         html = tpl.render(template.Context({'form': form}))
-        self.assertEquals([l.strip() for l in html.splitlines() if l.strip()],
+        self.assertEqual([l.strip() for l in html.splitlines() if l.strip()],
                           self.betterform_html)
 
 
@@ -469,7 +469,7 @@ class ImageWidgetTests(TestCase):
         """
         widget = ImageWidget()
         html = widget.render('fieldname', FieldFile(None, FileField(), 'something.txt'))
-        self.assertEquals(html, '<input type="file" name="fieldname" value="something.txt" />')
+        self.assertEqual(html, '<input type="file" name="fieldname" value="something.txt" />')
 
     def test_custom_template(self):
         """
@@ -491,7 +491,7 @@ class ClearableFileInputTests(TestCase):
         """
         widget = ClearableFileInput()
         html = widget.render('fieldname', 'tiny.png')
-        self.assertEquals(html,
+        self.assertEqual(html,
                           '<input type="file" name="fieldname_0" />'
                           ' Clear: '
                           '<input type="checkbox" name="fieldname_1" />')
@@ -528,7 +528,7 @@ class ClearableFileInputTests(TestCase):
         """
         widget = ClearableFileInput(template='Clear: %(checkbox)s %(input)s')
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
-        self.assertEquals(html,
+        self.assertEqual(html,
                           'Clear: '
                           '<input type="checkbox" name="fieldname_1" /> '
                           '<input type="file" name="fieldname_0" />')
@@ -542,7 +542,7 @@ class ClearableFileInputTests(TestCase):
             template = 'Clear: %(checkbox)s %(input)s'
         widget = ReversedClearableFileInput()
         html = widget.render('fieldname', 'tiny.png')
-        self.assertEquals(html,
+        self.assertEqual(html,
                           'Clear: '
                           '<input type="checkbox" name="fieldname_1" /> '
                           '<input type="file" name="fieldname_0" />')
@@ -555,7 +555,7 @@ class ClearableFileFieldTests(TestCase):
         class TestForm(forms.Form):
             f = ClearableFileField()
         form = TestForm(files={'f_0': self.upload})
-        self.assertEquals(unicode(form['f']),
+        self.assertEqual(unicode(form['f']),
                           u'<input type="file" name="f_0" id="id_f_0" />'
                           u' Clear: <input type="checkbox" name="f_1" id="id_f_1" />')
 
@@ -567,7 +567,7 @@ class ClearableFileFieldTests(TestCase):
         """
         field = ClearableFileField()
         result = field.clean([self.upload, '0'])
-        self.assertEquals(result, self.upload)
+        self.assertEqual(result, self.upload)
 
     def test_cleared(self):
         """
@@ -586,7 +586,7 @@ class ClearableFileFieldTests(TestCase):
         doc._meta.get_field('myfile').save_form_data(doc, result)
         doc.save()
         doc = Document.objects.get(pk=doc.pk)
-        self.assertEquals(doc.myfile, '')
+        self.assertEqual(doc.myfile, '')
 
     def test_cleared_but_file_given(self):
         """
@@ -596,7 +596,7 @@ class ClearableFileFieldTests(TestCase):
         """
         field = ClearableFileField()
         result = field.clean([self.upload, '1'])
-        self.assertEquals(result, self.upload)
+        self.assertEqual(result, self.upload)
 
     def test_custom_file_field(self):
         """
@@ -616,7 +616,7 @@ class ClearableFileFieldTests(TestCase):
         """
         file_field = forms.ImageField(required=False)
         field = ClearableFileField(file_field=file_field)
-        self.failIf(field.required)
+        self.assertFalse(field.required)
 
     def test_custom_file_field_widget_used(self):
         """
@@ -648,7 +648,7 @@ class ClearableFileFieldTests(TestCase):
         """
         tpl = 'Clear: %(checkbox)s %(input)s'
         field = ClearableFileField(template=tpl)
-        self.assertEquals(field.widget.template, tpl)
+        self.assertEqual(field.widget.template, tpl)
 
     def test_custom_widget_by_subclassing(self):
         """

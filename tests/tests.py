@@ -444,9 +444,9 @@ class ImageWidgetTests(TestCase):
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
         # test only this much of the html, because the remainder will
         # vary depending on whether we have sorl-thumbnail
-        self.failUnless(html.startswith(
+        self.assertTrue(html.startswith(
                 '<input type="file" name="fieldname" value="tiny.png" />'
-                '<br /><img src="/media/tiny'))
+                '<br /><img src="/media/tiny'), html)
 
     def test_render_nonimage(self):
         """
@@ -465,7 +465,7 @@ class ImageWidgetTests(TestCase):
         widget = ImageWidget(template='<div>%(image)s</div>'
                              '<div>%(input)s</div>')
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
-        self.failUnless(html.startswith('<div><img src="/media/tiny'))
+        self.assertTrue(html.startswith('<div><img src="/media/tiny'))
 
 
 class ClearableFileInputTests(TestCase):
@@ -489,7 +489,7 @@ class ClearableFileInputTests(TestCase):
         """
         widget = ClearableFileInput(file_widget=ImageWidget())
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
-        self.failUnless(html.startswith(
+        self.assertTrue(html.startswith(
                 '<input type="file" name="fieldname_0" value="tiny.png" />'
                 '<br /><img src="/media/tiny'))
 
@@ -503,7 +503,7 @@ class ClearableFileInputTests(TestCase):
             default_file_widget_class = ImageWidget
         widget = ClearableImageWidget()
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
-        self.failUnless(html.startswith(
+        self.assertTrue(html.startswith(
                 '<input type="file" name="fieldname_0" value="tiny.png" />'
                 '<br /><img src="/media/tiny'))
 
@@ -592,7 +592,7 @@ class ClearableFileFieldTests(TestCase):
         """
         file_field = forms.ImageField()
         field = ClearableFileField(file_field=file_field)
-        self.failUnless(field.fields[0] is file_field)
+        self.assertTrue(field.fields[0] is file_field)
 
     def test_custom_file_field_required(self):
         """
@@ -613,7 +613,7 @@ class ClearableFileFieldTests(TestCase):
         widget = ImageWidget()
         file_field = forms.ImageField(widget=widget)
         field = ClearableFileField(file_field=file_field)
-        self.failUnless(field.fields[0].widget is widget)
+        self.assertTrue(field.fields[0].widget is widget)
 
     def test_clearable_image_field(self):
         """
@@ -624,7 +624,7 @@ class ClearableFileFieldTests(TestCase):
 
         """
         field = ClearableImageField()
-        self.failUnless(isinstance(field.fields[0], forms.ImageField))
+        self.assertTrue(isinstance(field.fields[0], forms.ImageField))
 
     def test_custom_template(self):
         """
@@ -646,4 +646,4 @@ class ClearableFileFieldTests(TestCase):
         class ClearableImageWidgetField(ClearableFileField):
             widget = ClearableImageWidget
         field = ClearableImageWidgetField()
-        self.failUnless(isinstance(field.widget, ClearableImageWidget))
+        self.assertTrue(isinstance(field.widget, ClearableImageWidget))

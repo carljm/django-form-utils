@@ -4,6 +4,9 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Added "error" class to row_attrs for fields with errors. Thanks Aron
+  Griffis.
+
 - Dropped explicit support for Django versions prior to 1.2 and Python
   versions prior to 2.6.
 

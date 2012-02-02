@@ -144,9 +144,10 @@ dictionaries will be flattened into HTML-style attribute/values
 none"``), and will be available as the ``row_attrs`` attribute of the
 ``BoundField``.
 
-Also, a CSS class of "required" or "optional" will automatically be
-added to the row_attrs of each ``BoundField``, depending on whether
-the field is required.
+A ``BetterForm`` or ``BetterModelForm`` will add a CSS class of
+"required" or "optional" automatically to the row_attrs of each
+``BoundField`` depending on whether the field is required, and will
+also add a CSS class of "error" if the field has errors.
 
 Rendering
 '''''''''

@@ -70,6 +70,10 @@ class HoneypotForm(BetterForm):
     class Meta:
         row_attrs = {'honeypot': {'style': 'display: none'}}
 
+    def clean_honeypot(self):
+        if self.cleaned_data.get("honeypot"):
+            raise forms.ValidationError("Honeypot field must be empty.")
+
 
 class PersonForm(BetterModelForm):
     """
@@ -325,6 +329,16 @@ class BetterFormTests(TestCase):
         honeypot = [field for field in fieldset if field.name=='honeypot'][0]
         self.assertEquals(honeypot.row_attrs,
                           u' style="display: none" class="required"')
+
+    def test_row_attrs_error_class(self):
+        """
+        row_attrs adds an error class if a field has errors.
+
+        """
+        form = HoneypotForm({"honeypot": "something"})
+
+        self.assertEqual(form["honeypot"].row_attrs,
+                         u' style="display: none" class="required error"')
 
     def test_friendly_typo_error(self):
         """

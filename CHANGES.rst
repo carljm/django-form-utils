@@ -4,6 +4,9 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Dropped explicit support for Django versions prior to 1.2 and Python
+  versions prior to 2.6.
+
 0.2.0 (2011.01.28)
 ------------------
 

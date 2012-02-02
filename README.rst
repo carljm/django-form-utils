@@ -48,7 +48,8 @@ and ``templates/form_utils/form.html``.
 Dependencies
 ------------
 
-``django-form-utils`` requires `Django`_ 1.0 or later.
+``django-form-utils`` is tested on `Django`_ 1.2 and later and `Python`_ 2.6
+and later.
 
 `ClearableFileField`_ requires `Django`_ 1.1 or later. 
 
@@ -60,6 +61,7 @@ displayed instead of thumbnails.
 Google-served version; see `JQUERY_URL`_).
 
 .. _Django: http://www.djangoproject.com/
+.. _Python: http://www.python.org/
 .. _sorl-thumbnail: http://pypi.python.org/pypi/sorl-thumbnail
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
 .. _jQuery: http://www.jquery.com/

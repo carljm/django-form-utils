@@ -11,7 +11,7 @@ from django import forms
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
-from form_utils.settings import JQUERY_URL, FORM_UTILS_MEDIA_URL
+from form_utils.settings import JQUERY_URL
 
 try:
     from sorl.thumbnail.main import DjangoThumbnail
@@ -80,7 +80,7 @@ class ClearableFileInput(forms.MultiWidget):
                                     'checkbox': rendered_widgets[1]}
         return rendered_widgets[0]
 
-root = lambda path: posixpath.join(FORM_UTILS_MEDIA_URL, path)
+root = lambda path: posixpath.join(settings.STATIC_URL, path)
 
 class AutoResizeTextarea(forms.Textarea):
     """

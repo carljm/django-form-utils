@@ -5,3 +5,5 @@ DATABASE_ENGINE = 'sqlite3'
 
 MEDIA_ROOT = join(dirname(__file__), 'media')
 MEDIA_URL = '/media/'
+
+STATIC_URL = '/static/'

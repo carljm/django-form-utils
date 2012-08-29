@@ -323,15 +323,6 @@ smaller default sizes suitable for use in a tabular inline.
 Settings
 ========
 
-FORM_UTILS_MEDIA_URL
---------------------
-
-Some projects separate user-uploaded media at ``MEDIA_URL`` from
-static assets. If you keep static assets at a URL other than
-``MEDIA_URL``, just set ``FORM_UTILS_MEDIA_URL`` to that URL, and make
-sure the contents of the ``form_utils/media/form_utils`` directory are
-available at ``FORM_UTILS_MEDIA_URL/form_utils/``.
-
 
 JQUERY_URL
 ----------
@@ -345,7 +336,5 @@ set the JQUERY_URL setting.  For example::
 
     JQUERY_URL = 'jquery.min.js'
 
-This will use the jQuery available at MEDIA_URL/jquery.min.js. Note
-that a relative ``JQUERY_URL`` is always relative to ``MEDIA_URL``, it
-does not use ``FORM_UTILS_MEDIA_URL``.
-
+This will use the jQuery available at STATIC_URL/jquery.min.js. Note
+that a relative ``JQUERY_URL`` is relative to ``STATIC_URL``.

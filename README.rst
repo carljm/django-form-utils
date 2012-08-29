@@ -12,7 +12,7 @@ This application provides utilities for enhancing Django's form handling:
        of ``row_attrs`` which can be accessed from the template to
        apply attributes to the surrounding container (<li>, <tr>, or
        whatever) of a specific form field.
-    
+
     2. A ``ClearableFileField`` to enhance ``FileField`` and
        ``ImageField`` with a checkbox for clearing the contents of the
        field.
@@ -21,7 +21,7 @@ This application provides utilities for enhancing Django's form handling:
        rather than just the filename.
 
     4. An ``AutoResizeTextarea`` widget which auto-resizes to
-       accomodate its contents.
+       accommodate its contents.
 
 Installation
 ============
@@ -329,8 +329,8 @@ JQUERY_URL
 
 `AutoResizeTextarea`_ requires the jQuery Javascript library.  By
 default, ``django-form-utils`` links to the most recent minor version
-of jQuery 1.4 available at ajax.googleapis.com (via the URL
-``http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js``).
+of jQuery 1.8 available at ajax.googleapis.com (via the URL
+``http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js``).
 If you wish to use a different version of jQuery, or host it yourself,
 set the JQUERY_URL setting.  For example::
 

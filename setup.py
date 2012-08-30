@@ -3,7 +3,7 @@ import subprocess
 import os.path
 
 try:
-    # don't get confused if our sdist is unzipped in a subdir of some 
+    # don't get confused if our sdist is unzipped in a subdir of some
     # other hg repo
     if os.path.isdir('.hg'):
         p = subprocess.Popen(['hg', 'parents', r'--template={rev}\n'],
@@ -14,12 +14,12 @@ try:
             fh.close()
 except (OSError, IndexError):
     pass
-    
+
 try:
     hgrev = open('HGREV').read()
 except IOError:
     hgrev = ''
-    
+
 long_description = open('README.rst').read() + open('CHANGES.rst').read()
 
 setup(
@@ -43,5 +43,6 @@ setup(
     zip_safe=False,
     package_data={'form_utils': ['templates/form_utils/*.html',
                                  'media/form_utils/js/*.js']},
-    test_suite='tests.runtests.runtests'
+    test_suite='tests.runtests.runtests',
+    tests_require=['Django', 'mock'],
 )

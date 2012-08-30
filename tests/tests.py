@@ -409,7 +409,7 @@ class TemplatetagTests(TestCase):
 
         """
         form = BoringForm()
-        tpl = template.Template('{% load form_utils_tags %}{{ form|render }}')
+        tpl = template.Template('{% load form_utils %}{{ form|render }}')
         html = tpl.render(template.Context({'form': form}))
         self.assertEqual([l.strip() for l in html.splitlines() if l.strip()],
                           self.boring_form_html)
@@ -444,7 +444,7 @@ class TemplatetagTests(TestCase):
 
         """
         form = ApplicationForm()
-        tpl = template.Template('{% load form_utils_tags %}{{ form|render }}')
+        tpl = template.Template('{% load form_utils %}{{ form|render }}')
         html = tpl.render(template.Context({'form': form}))
         self.assertEqual([l.strip() for l in html.splitlines() if l.strip()],
                           self.betterform_html)
@@ -670,10 +670,10 @@ class ClearableFileFieldTests(TestCase):
 class FieldFilterTests(TestCase):
     """Tests for form field filters."""
     @property
-    def form_utils_tags(self):
+    def form_utils(self):
         """The module under test."""
-        from form_utils.templatetags import form_utils_tags
-        return form_utils_tags
+        from form_utils.templatetags import form_utils
+        return form_utils
 
 
     @property
@@ -691,17 +691,17 @@ class FieldFilterTests(TestCase):
 
     def test_placeholder(self):
         """``placeholder`` filter sets placeholder attribute."""
-        bf = self.form_utils_tags.placeholder(self.form()["name"], "Placeholder")
+        bf = self.form_utils.placeholder(self.form()["name"], "Placeholder")
         self.assertIn('placeholder="Placeholder"', unicode(bf))
 
 
-    @patch("form_utils.templatetags.form_utils_tags.render_to_string")
+    @patch("form_utils.templatetags.form_utils.render_to_string")
     def test_label(self, render_to_string):
         """``label`` filter renders field label from template."""
         render_to_string.return_value = "<label>something</label>"
         bf = self.form()["name"]
 
-        label = self.form_utils_tags.label(bf)
+        label = self.form_utils.label(bf)
 
         self.assertEqual(label, "<label>something</label>")
         render_to_string.assert_called_with(
@@ -714,12 +714,12 @@ class FieldFilterTests(TestCase):
             )
 
 
-    @patch("form_utils.templatetags.form_utils_tags.render_to_string")
+    @patch("form_utils.templatetags.form_utils.render_to_string")
     def test_label_override(self, render_to_string):
         """label filter allows overriding the label text."""
         bf = self.form()["name"]
 
-        self.form_utils_tags.label(bf, "override")
+        self.form_utils.label(bf, "override")
 
         render_to_string.assert_called_with(
             "forms/_label.html",
@@ -732,24 +732,24 @@ class FieldFilterTests(TestCase):
 
     def test_label_text(self):
         """``label_text`` filter returns field's default label text."""
-        self.assertEqual(self.form_utils_tags.label_text(self.form()["name"]), "Name")
+        self.assertEqual(self.form_utils.label_text(self.form()["name"]), "Name")
 
 
     def test_value_text(self):
         """``value_text`` filter returns value of field."""
         self.assertEqual(
-            self.form_utils_tags.value_text(self.form({"name": "boo"})["name"]), "boo")
+            self.form_utils.value_text(self.form({"name": "boo"})["name"]), "boo")
 
 
     def test_value_text_unbound(self):
         """``value_text`` filter returns default value of unbound field."""
-        self.assertEqual(self.form_utils_tags.value_text(self.form()["name"]), "none")
+        self.assertEqual(self.form_utils.value_text(self.form()["name"]), "none")
 
 
     def test_value_text_choices(self):
         """``value_text`` filter returns human-readable value of choicefield."""
         self.assertEqual(
-            self.form_utils_tags.value_text(
+            self.form_utils.value_text(
                 self.form({"level": "a"})["level"]), "Advanced")
 
 
@@ -758,31 +758,31 @@ class FieldFilterTests(TestCase):
         f = self.form({"level": ["a", "b"]})
 
         self.assertEqual(
-            self.form_utils_tags.values_text(f["level"]), ["Advanced", "Beginner"])
+            self.form_utils.values_text(f["level"]), ["Advanced", "Beginner"])
 
 
     def test_optional_false(self):
         """A required field should not be marked optional."""
-        self.assertFalse(self.form_utils_tags.optional(self.form()["name"]))
+        self.assertFalse(self.form_utils.optional(self.form()["name"]))
 
 
     def test_optional_true(self):
         """A non-required field should be marked optional."""
-        self.assertTrue(self.form_utils_tags.optional(self.form()["level"]))
+        self.assertTrue(self.form_utils.optional(self.form()["level"]))
 
 
     def test_detect_checkbox(self):
         """``is_checkbox`` detects checkboxes."""
         f = self.form()
 
-        self.assertTrue(self.form_utils_tags.is_checkbox(f["awesome"]))
+        self.assertTrue(self.form_utils.is_checkbox(f["awesome"]))
 
 
     def test_detect_non_checkbox(self):
         """``is_checkbox`` detects that select fields are not checkboxes."""
         f = self.form()
 
-        self.assertFalse(self.form_utils_tags.is_checkbox(f["level"]))
+        self.assertFalse(self.form_utils.is_checkbox(f["level"]))
 
 
     def test_is_multiple(self):
@@ -790,11 +790,11 @@ class FieldFilterTests(TestCase):
         f = self.form()
         f.fields["level"].widget = forms.SelectMultiple()
 
-        self.assertTrue(self.form_utils_tags.is_multiple(f["level"]))
+        self.assertTrue(self.form_utils.is_multiple(f["level"]))
 
 
     def test_is_not_multiple(self):
         """`is_multiple` detects a non-multiple widget."""
         f = self.form()
 
-        self.assertFalse(self.form_utils_tags.is_multiple(f["level"]))
+        self.assertFalse(self.form_utils.is_multiple(f["level"]))

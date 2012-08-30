@@ -190,6 +190,8 @@ done, e.g.::
 ``django-form-utils`` also provides a convenience template filter,
 ``render``.  It is used like this::
 
+    {% load form_utils %}
+
     {{ form|render }}
 
 By default, it will check whether the form is a ``BetterForm``, and if

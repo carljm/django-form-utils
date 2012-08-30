@@ -4,8 +4,11 @@ CHANGES
 tip (unreleased)
 ----------------
 
-- Removed ``FORM_UTILS_MEDIA_URL`` setting and updated to use ``STATIC_URL``
-  rather than ``MEDIA_URL`` throughout. (May be backwards-incompatible.)
+- BACKWARDS-INCOMPATIBLE: Renamed template tag library from ``form_utils_tags``
+  to ``form_utils``.
+
+- BACKWARDS-INCOMPATIBLE: Removed ``FORM_UTILS_MEDIA_URL`` setting and updated
+  to use ``STATIC_URL`` rather than ``MEDIA_URL`` throughout.
 
 - Added "error" class to row_attrs for fields with errors. Thanks Aron
   Griffis.

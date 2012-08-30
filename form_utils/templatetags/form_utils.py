@@ -1,9 +1,9 @@
 """
 templatetags for django-form-utils
 
-Time-stamp: <2009-03-26 12:32:08 carljm form_utils_tags.py>
-
 """
+from __future__ import absolute_import
+
 from django import forms
 from django import template
 from django.template.loader import render_to_string

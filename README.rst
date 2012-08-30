@@ -13,6 +13,11 @@ This application provides utilities for enhancing Django's form handling:
        apply attributes to the surrounding container (<li>, <tr>, or
        whatever) of a specific form field.
 
+    2. A variety of small template filters that are useful for giving template
+       authors more control over custom rendering of forms without needing to
+       edit Python code: `label`_, `value_text`_, `selected_values`_,
+       `optional`_, `is_checkbox`_, and `is_multiple`_.
+
     2. A ``ClearableFileField`` to enhance ``FileField`` and
        ``ImageField`` with a checkbox for clearing the contents of the
        field.
@@ -22,6 +27,7 @@ This application provides utilities for enhancing Django's form handling:
 
     4. An ``AutoResizeTextarea`` widget which auto-resizes to
        accommodate its contents.
+
 
 Installation
 ============
@@ -205,6 +211,97 @@ template name or comma-separated list of template names to use for
 rendering the form::
 
     {{ form|render:"my_form_stuff/custom_form_template.html" }}
+
+
+Utility Filters
+---------------
+
+All the below filters require ``{% load form_utils %}`` in the template where
+they are used.
+
+These filters are complementary to the useful filters found in the
+`django-widget-tweaks`_ library for setting arbitrary attributes and classes on
+form field widgets; thus such filters are not provided in
+``django-form-utils``.
+
+.. _django-widget-tweaks: http://pypi.python.org/pypi/django-widget-tweaks
+
+
+label
+'''''
+
+Render a label tag for the given form field by rendering the template
+``forms/_label.html`` with the context ``field`` (the boundfield object),
+``id`` (the form field id attribute), and ``label_text``.
+
+By default the Python-defined label text for the form field is used, but
+alternate label text can be provided as an argument to the filter::
+
+    {{ form.fieldname|label:"Alternate label" }}
+
+
+value_text
+''''''''''
+
+Display the current value of the given form field in a human-readable way
+(i.e. display labels for choice values rather than the internal value). The
+current value may be the default value (for first-time rendering of a form) or
+the previously-input value (for repeat rendering of a form with
+errors). Usage::
+
+    {{ form.fieldname|value_text }}
+
+
+selected_values
+'''''''''''''''
+
+Similar to `value_text`_, but for use with multiple-select form fields, and
+returns a list of selected values rather than a single string. Usage::
+
+    <ul>
+      {% for selected_value in form.multiselect|selected_values %}
+        <li>{{ selected_value }}</li>
+      {% endfor %}
+    </ul>
+
+
+optional
+''''''''
+
+Return ``True`` if the given field is optional, ``False`` if it is
+required. Sample usage::
+
+    {% if form.fieldname|optional %}(optional){% endif %}
+
+
+is_checkbox
+'''''''''''
+
+Return ``True`` if the given field's widget is a ``CheckboxInput``, ``False``
+otherwise. Sample usage::
+
+    {% if form.fieldname|is_checkbox %}
+      {{ form.fieldname }}
+      {{ form.fieldname|label }}
+    {% else %}
+      {{ form.fieldname|label }}
+      {{ form.fieldname }}
+    {% endif %}
+
+
+is_multiple
+'''''''''''
+
+Return ``True`` if the given field is a ``MultipleChoiceField``, ``False``
+otherwise. Sample usage::
+
+    {% if form.fieldname|is_multiple %}
+      {% for value in form.fieldname|selected_values %}{{ value }} {% endif %}
+    {% else %}
+      {{ form.fieldname|value_text }}
+    {% endif %}
+
+
 
 ClearableFileField
 ------------------

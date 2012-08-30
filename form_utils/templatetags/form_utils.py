@@ -41,15 +41,6 @@ def render(form, template_name=None):
 
 
 
-
-@register.filter
-def placeholder(boundfield, value):
-    """Set placeholder attribute for given boundfield."""
-    boundfield.field.widget.attrs["placeholder"] = value
-    return boundfield
-
-
-
 @register.filter
 def label(boundfield, contents=None):
     """Render label tag for a boundfield, optionally with given contents."""
@@ -67,13 +58,6 @@ def label(boundfield, contents=None):
 
 
 @register.filter
-def label_text(boundfield):
-    """Return the default label text for the given boundfield."""
-    return boundfield.label
-
-
-
-@register.filter
 def value_text(boundfield):
     """Return the value for given boundfield as human-readable text."""
     val = boundfield.value()
@@ -84,22 +68,12 @@ def value_text(boundfield):
 
 
 @register.filter
-def values_text(boundfield):
+def selected_values(boundfield):
     """Return the values for given multiple-select as human-readable text."""
     val = boundfield.value()
     # If choices is set, use the display label
     choice_dict = dict(getattr(boundfield.field, "choices", []))
     return [unicode(choice_dict.get(v, v)) for v in val]
-
-
-
-@register.filter
-def classes(boundfield, classes):
-    """Append given classes to the widget attrs of given boundfield."""
-    attrs = boundfield.field.widget.attrs
-    attrs["class"] = " ".join(
-        [c for c in [attrs.get("class", None), classes] if c])
-    return boundfield
 
 
 
@@ -120,5 +94,5 @@ def is_checkbox(boundfield):
 
 @register.filter
 def is_multiple(boundfield):
-    """Return True if this field has multiple values."""
-    return isinstance(boundfield.field.widget, forms.SelectMultiple)
+    """Return True if this field is a MultipleChoiceField."""
+    return isinstance(boundfield.field, forms.MultipleChoiceField)

@@ -683,16 +683,11 @@ class FieldFilterTests(TestCase):
             name = forms.CharField(initial="none", required=True)
             level = forms.ChoiceField(
                 choices=(("b", "Beginner"), ("a", "Advanced")), required=False)
+            colors = forms.MultipleChoiceField(
+                choices=[("red", "red"), ("blue", "blue")])
             awesome = forms.BooleanField(required=False)
 
         return PersonForm
-
-
-
-    def test_placeholder(self):
-        """``placeholder`` filter sets placeholder attribute."""
-        bf = self.form_utils.placeholder(self.form()["name"], "Placeholder")
-        self.assertIn('placeholder="Placeholder"', unicode(bf))
 
 
     @patch("form_utils.templatetags.form_utils.render_to_string")
@@ -730,10 +725,6 @@ class FieldFilterTests(TestCase):
                 }
             )
 
-    def test_label_text(self):
-        """``label_text`` filter returns field's default label text."""
-        self.assertEqual(self.form_utils.label_text(self.form()["name"]), "Name")
-
 
     def test_value_text(self):
         """``value_text`` filter returns value of field."""
@@ -753,12 +744,14 @@ class FieldFilterTests(TestCase):
                 self.form({"level": "a"})["level"]), "Advanced")
 
 
-    def test_values_text_choices(self):
-        """``values_text`` filter returns values of multiple select."""
+    def test_selected_values_choices(self):
+        """``selected_values`` filter returns values of multiple select."""
         f = self.form({"level": ["a", "b"]})
 
         self.assertEqual(
-            self.form_utils.values_text(f["level"]), ["Advanced", "Beginner"])
+            self.form_utils.selected_values(f["level"]),
+            ["Advanced", "Beginner"],
+            )
 
 
     def test_optional_false(self):
@@ -786,11 +779,10 @@ class FieldFilterTests(TestCase):
 
 
     def test_is_multiple(self):
-        """`is_multiple` detects a SelectMultiple widget."""
+        """`is_multiple` detects a MultipleChoiceField."""
         f = self.form()
-        f.fields["level"].widget = forms.SelectMultiple()
 
-        self.assertTrue(self.form_utils.is_multiple(f["level"]))
+        self.assertTrue(self.form_utils.is_multiple(f["colors"]))
 
 
     def test_is_not_multiple(self):

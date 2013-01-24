@@ -793,14 +793,14 @@ class FieldFilterTests(TestCase):
 
 
     def test_is_select(self):
-        """`is_select` detects a Select."""
+        """`is_select` detects a ChoiceField."""
         f = self.form()
 
         self.assertTrue(self.form_utils.is_select(f["level"]))
 
 
     def test_is_not_select(self):
-        """`is_select` detects a non-select widget."""
+        """`is_select` detects a non-ChoiceField."""
         f = self.form()
 
         self.assertFalse(self.form_utils.is_select(f["name"]))

@@ -96,3 +96,10 @@ def is_checkbox(boundfield):
 def is_multiple(boundfield):
     """Return True if this field is a MultipleChoiceField."""
     return isinstance(boundfield.field, forms.MultipleChoiceField)
+
+
+
+@register.filter
+def is_select(boundfield):
+    """Return True if this field's widget is a Select (or subclass)."""
+    return isinstance(boundfield.field.widget, forms.Select)

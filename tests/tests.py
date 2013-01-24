@@ -790,3 +790,17 @@ class FieldFilterTests(TestCase):
         f = self.form()
 
         self.assertFalse(self.form_utils.is_multiple(f["level"]))
+
+
+    def test_is_select(self):
+        """`is_select` detects a Select."""
+        f = self.form()
+
+        self.assertTrue(self.form_utils.is_select(f["level"]))
+
+
+    def test_is_not_select(self):
+        """`is_select` detects a non-select widget."""
+        f = self.form()
+
+        self.assertFalse(self.form_utils.is_select(f["name"]))

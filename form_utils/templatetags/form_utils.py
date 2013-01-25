@@ -98,7 +98,21 @@ def is_multiple(boundfield):
     return isinstance(boundfield.field, forms.MultipleChoiceField)
 
 
+
 @register.filter
 def is_select(boundfield):
     """Return True if this field is a ChoiceField (or subclass)."""
     return isinstance(boundfield.field, forms.ChoiceField)
+
+
+
+@register.filter
+def is_radio(boundfield):
+    """
+    Return True if this field's widget's class name contains 'radio'.
+
+    This hacky approach is necessary in order to support django-floppyforms,
+    whose RadioSelect does not inherit from Django's built-in RadioSelect.
+
+    """
+    return 'radio' in boundfield.field.widget.__class__.__name__.lower()

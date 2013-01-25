@@ -685,6 +685,11 @@ class FieldFilterTests(TestCase):
                 choices=(("b", "Beginner"), ("a", "Advanced")), required=False)
             colors = forms.MultipleChoiceField(
                 choices=[("red", "red"), ("blue", "blue")])
+            gender = forms.ChoiceField(
+                choices=(("m", "Male"), ("f", "Female"), ("o", "Other")),
+                widget=forms.RadioSelect(),
+                required=False,
+                )
             awesome = forms.BooleanField(required=False)
 
         return PersonForm
@@ -804,3 +809,17 @@ class FieldFilterTests(TestCase):
         f = self.form()
 
         self.assertFalse(self.form_utils.is_select(f["name"]))
+
+
+    def test_is_radio(self):
+        """`is_radio` detects a radio select widget."""
+        f = self.form()
+
+        self.assertTrue(self.form_utils.is_radio(f["gender"]))
+
+
+    def test_is_not_radio(self):
+        """`is_radio` detects a non-radio select."""
+        f = self.form()
+
+        self.assertFalse(self.form_utils.is_radio(f["level"]))

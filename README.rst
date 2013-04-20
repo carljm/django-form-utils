@@ -60,8 +60,9 @@ and later.
 `ClearableFileField`_ requires `Django`_ 1.1 or later. 
 
 `ImageWidget`_ requires the `Python Imaging Library`_.
-`sorl-thumbnail`_ is optional, but without it full-size images will be
-displayed instead of thumbnails.
+`sorl-thumbnail`_ or `easy-thumbnails`_ is optional, but without it
+full-size images will be displayed instead of thumbnails. The default
+thumbnail size is 200px x 200px.
 
 `AutoResizeTextarea`_ requires `jQuery`_ (by default using a
 Google-served version; see `JQUERY_URL`_).
@@ -69,6 +70,7 @@ Google-served version; see `JQUERY_URL`_).
 .. _Django: http://www.djangoproject.com/
 .. _Python: http://www.python.org/
 .. _sorl-thumbnail: http://pypi.python.org/pypi/sorl-thumbnail
+.. _easy-thumbnails: http://pypi.python.org/pypi/easy-thumbnails
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
 .. _jQuery: http://www.jquery.com/
 

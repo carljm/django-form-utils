@@ -14,10 +14,11 @@ from django.utils.safestring import mark_safe
 from form_utils.settings import JQUERY_URL
 
 try:
-    from sorl.thumbnail.main import DjangoThumbnail
+    from sorl.thumbnail import get_thumbnail
     def thumbnail(image_path, width, height):
-        t = DjangoThumbnail(relative_source=image_path, requested_size=(width,height))
-        return u'<img src="%s" alt="%s" />' % (t.absolute_url, image_path)
+        geometry_string = 'x'.join([str(width), str(height)])
+        t = get_thumbnail(image_path, geometry_string)
+        return u'<img src="%s" alt="%s" />' % (t.url, image_path)
 except ImportError:
     try:
         from easy_thumbnails.files import get_thumbnailer

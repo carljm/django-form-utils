@@ -1,3 +1,4 @@
+import django
 from django import forms
 from django import template
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -306,8 +307,9 @@ class BetterFormTests(TestCase):
 
         """
         form = HoneypotForm()
-        self.assertEqual(form['honeypot'].row_attrs,
-                          u' style="display: none" class="required"')
+        attrs = form['honeypot'].row_attrs
+        self.assertTrue(u'style="display: none"' in attrs)
+        self.assertTrue(u'class="required"' in attrs)
 
     def test_row_attrs_by_iteration(self):
         """
@@ -317,8 +319,9 @@ class BetterFormTests(TestCase):
         """
         form = HoneypotForm()
         honeypot = [field for field in form if field.name=='honeypot'][0]
-        self.assertEqual(honeypot.row_attrs,
-                          u' style="display: none" class="required"')
+        attrs = honeypot.row_attrs
+        self.assertTrue(u'style="display: none"' in attrs)
+        self.assertTrue(u'class="required"' in attrs)
 
     def test_row_attrs_by_fieldset_iteration(self):
         """
@@ -329,8 +332,9 @@ class BetterFormTests(TestCase):
         form = HoneypotForm()
         fieldset = [fs for fs in form.fieldsets][0]
         honeypot = [field for field in fieldset if field.name=='honeypot'][0]
-        self.assertEqual(honeypot.row_attrs,
-                          u' style="display: none" class="required"')
+        attrs = honeypot.row_attrs
+        self.assertTrue(u'style="display: none"' in attrs)
+        self.assertTrue(u'class="required"' in attrs)
 
     def test_row_attrs_error_class(self):
         """
@@ -339,8 +343,9 @@ class BetterFormTests(TestCase):
         """
         form = HoneypotForm({"honeypot": "something"})
 
-        self.assertEqual(form["honeypot"].row_attrs,
-                         u' style="display: none" class="required error"')
+        attrs = form['honeypot'].row_attrs
+        self.assertTrue(u'style="display: none"' in attrs)
+        self.assertTrue(u'class="required error"' in attrs)
 
     def test_friendly_typo_error(self):
         """
@@ -388,20 +393,20 @@ class BoringForm(forms.Form):
     excitement = forms.IntegerField()
 
 class TemplatetagTests(TestCase):
-    boring_form_html = [
-        u'<fieldset class="fieldset_main">',
-        u'<ul>',
-        u'<li>',
-        u'<label for="id_boredom">Boredom</label>',
-        u'<input type="text" name="boredom" id="id_boredom" />',
-        u'</li>',
-        u'<li>',
-        u'<label for="id_excitement">Excitement</label>',
-        u'<input type="text" name="excitement" id="id_excitement" />',
-        u'</li>',
-        u'</ul>',
-        u'</fieldset>',
-        ]
+    boring_form_html = (
+        u'<fieldset class="fieldset_main">'
+        u'<ul>'
+        u'<li>'
+        u'<label for="id_boredom">Boredom</label>'
+        u'<input type="%(type)s" name="boredom" id="id_boredom" />'
+        u'</li>'
+        u'<li>'
+        u'<label for="id_excitement">Excitement</label>'
+        u'<input type="%(type)s" name="excitement" id="id_excitement" />'
+        u'</li>'
+        u'</ul>'
+        u'</fieldset>'
+        ) % {'type': 'number' if django.VERSION > (1, 6, 0) else 'text'}
 
     def test_render_form(self):
         """
@@ -411,32 +416,31 @@ class TemplatetagTests(TestCase):
         form = BoringForm()
         tpl = template.Template('{% load form_utils %}{{ form|render }}')
         html = tpl.render(template.Context({'form': form}))
-        self.assertEqual([l.strip() for l in html.splitlines() if l.strip()],
-                          self.boring_form_html)
+        self.assertHTMLEqual(html, self.boring_form_html)
 
-    betterform_html = [
-        u'<fieldset class="">',
-        u'<ul>',
-        u'<li class="required">',
-        u'<label for="id_name">Name</label>',
-        u'<input type="text" name="name" id="id_name" />',
-        u'</li>',
-        u'<li class="required">',
-        u'<label for="id_position">Position</label>',
-        u'<input type="text" name="position" id="id_position" />',
-        u'</li>',
-        u'</ul>',
-        u'</fieldset>',
-        u'<fieldset class="optional">',
-        u'<legend>Optional</legend>',
-        u'<ul>',
-        u'<li class="optional">',
-        u'<label for="id_reference">Reference</label>',
-        u'<input type="text" name="reference" id="id_reference" />',
-        u'</li>',
-        u'</ul>',
+    betterform_html = (
+        u'<fieldset class="">'
+        u'<ul>'
+        u'<li class="required">'
+        u'<label for="id_name">Name</label>'
+        u'<input type="text" name="name" id="id_name" />'
+        u'</li>'
+        u'<li class="required">'
+        u'<label for="id_position">Position</label>'
+        u'<input type="text" name="position" id="id_position" />'
+        u'</li>'
+        u'</ul>'
         u'</fieldset>'
-        ]
+        u'<fieldset class="optional">'
+        u'<legend>Optional</legend>'
+        u'<ul>'
+        u'<li class="optional">'
+        u'<label for="id_reference">Reference</label>'
+        u'<input type="text" name="reference" id="id_reference" />'
+        u'</li>'
+        u'</ul>'
+        u'</fieldset>'
+        )
 
     def test_render_betterform(self):
         """
@@ -446,8 +450,7 @@ class TemplatetagTests(TestCase):
         form = ApplicationForm()
         tpl = template.Template('{% load form_utils %}{{ form|render }}')
         html = tpl.render(template.Context({'form': form}))
-        self.assertEqual([l.strip() for l in html.splitlines() if l.strip()],
-                          self.betterform_html)
+        self.assertHTMLEqual(html, self.betterform_html)
 
 
 class ImageWidgetTests(TestCase):
@@ -460,9 +463,8 @@ class ImageWidgetTests(TestCase):
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
         # test only this much of the html, because the remainder will
         # vary depending on whether we have sorl-thumbnail
-        self.assertTrue(html.startswith(
-                '<input type="file" name="fieldname" value="tiny.png" />'
-                '<br /><img src="/media/tiny'), html)
+        self.assertTrue('<img' in html)
+        self.assertTrue('/media/tiny' in html)
 
     def test_render_nonimage(self):
         """
@@ -471,7 +473,7 @@ class ImageWidgetTests(TestCase):
         """
         widget = ImageWidget()
         html = widget.render('fieldname', FieldFile(None, FileField(), 'something.txt'))
-        self.assertEqual(html, '<input type="file" name="fieldname" value="something.txt" />')
+        self.assertHTMLEqual(html, '<input type="file" name="fieldname" value="something.txt" />')
 
     def test_custom_template(self):
         """
@@ -481,7 +483,7 @@ class ImageWidgetTests(TestCase):
         widget = ImageWidget(template='<div>%(image)s</div>'
                              '<div>%(input)s</div>')
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
-        self.assertTrue(html.startswith('<div><img src="/media/tiny'))
+        self.assertTrue(html.startswith('<div><img'))
 
 
 class ClearableFileInputTests(TestCase):
@@ -493,10 +495,12 @@ class ClearableFileInputTests(TestCase):
         """
         widget = ClearableFileInput()
         html = widget.render('fieldname', 'tiny.png')
-        self.assertEqual(html,
-                          '<input type="file" name="fieldname_0" />'
-                          ' Clear: '
-                          '<input type="checkbox" name="fieldname_1" />')
+        self.assertHTMLEqual(
+            html,
+            '<input type="file" name="fieldname_0" />'
+            ' Clear: '
+            '<input type="checkbox" name="fieldname_1" />'
+            )
 
     def test_custom_file_widget(self):
         """
@@ -505,9 +509,7 @@ class ClearableFileInputTests(TestCase):
         """
         widget = ClearableFileInput(file_widget=ImageWidget())
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
-        self.assertTrue(html.startswith(
-                '<input type="file" name="fieldname_0" value="tiny.png" />'
-                '<br /><img src="/media/tiny'))
+        self.assertTrue('<img' in html)
 
     def test_custom_file_widget_via_subclass(self):
         """
@@ -519,9 +521,7 @@ class ClearableFileInputTests(TestCase):
             default_file_widget_class = ImageWidget
         widget = ClearableImageWidget()
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
-        self.assertTrue(html.startswith(
-                '<input type="file" name="fieldname_0" value="tiny.png" />'
-                '<br /><img src="/media/tiny'))
+        self.assertTrue('<img' in html)
 
     def test_custom_template(self):
         """
@@ -530,10 +530,12 @@ class ClearableFileInputTests(TestCase):
         """
         widget = ClearableFileInput(template='Clear: %(checkbox)s %(input)s')
         html = widget.render('fieldname', ImageFieldFile(None, ImageField(), 'tiny.png'))
-        self.assertEqual(html,
-                          'Clear: '
-                          '<input type="checkbox" name="fieldname_1" /> '
-                          '<input type="file" name="fieldname_0" />')
+        self.assertHTMLEqual(
+            html,
+            'Clear: '
+            '<input type="checkbox" name="fieldname_1" /> '
+            '<input type="file" name="fieldname_0" />'
+            )
 
     def test_custom_template_via_subclass(self):
         """
@@ -544,10 +546,12 @@ class ClearableFileInputTests(TestCase):
             template = 'Clear: %(checkbox)s %(input)s'
         widget = ReversedClearableFileInput()
         html = widget.render('fieldname', 'tiny.png')
-        self.assertEqual(html,
-                          'Clear: '
-                          '<input type="checkbox" name="fieldname_1" /> '
-                          '<input type="file" name="fieldname_0" />')
+        self.assertHTMLEqual(
+            html,
+            'Clear: '
+            '<input type="checkbox" name="fieldname_1" /> '
+            '<input type="file" name="fieldname_0" />'
+            )
 
 
 class ClearableFileFieldTests(TestCase):
@@ -557,9 +561,11 @@ class ClearableFileFieldTests(TestCase):
         class TestForm(forms.Form):
             f = ClearableFileField()
         form = TestForm(files={'f_0': self.upload})
-        self.assertEqual(unicode(form['f']),
-                          u'<input type="file" name="f_0" id="id_f_0" />'
-                          u' Clear: <input type="checkbox" name="f_1" id="id_f_1" />')
+        self.assertHTMLEqual(
+            unicode(form['f']),
+            u'<input type="file" name="f_0" id="id_f_0" />'
+            u' Clear: <input type="checkbox" name="f_1" id="id_f_1" />'
+            )
 
     def test_not_cleared(self):
         """

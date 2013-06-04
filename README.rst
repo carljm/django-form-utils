@@ -36,12 +36,6 @@ Install from PyPI with ``easy_install`` or ``pip``::
 
     pip install django-form-utils
 
-or get the `in-development version`_::
-
-    pip install django-form-utils==dev
-
-.. _in-development version: http://bitbucket.org/carljm/django-form-utils/get/tip.gz#egg=django_form_utils-dev
-
 To use ``django-form-utils`` in your Django project, just include
 ``form_utils`` in your INSTALLED_APPS setting.  ``django-form-utils`` does
 not provide any models, but including it in INSTALLED_APPS makes the
@@ -54,10 +48,8 @@ and ``templates/form_utils/form.html``.
 Dependencies
 ------------
 
-``django-form-utils`` is tested on `Django`_ 1.2 and later and `Python`_ 2.6
+``django-form-utils`` is tested on `Django`_ 1.4 and later and `Python`_ 2.6
 and later.
-
-`ClearableFileField`_ requires `Django`_ 1.1 or later. 
 
 `ImageWidget`_ requires the `Python Imaging Library`_.
 `sorl-thumbnail`_ or `easy-thumbnails`_ is optional, but without it

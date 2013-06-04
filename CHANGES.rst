@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-tip (unreleased)
-----------------
+0.3.0 (2013.06.04)
+------------------
 
 - BACKWARDS-INCOMPATIBLE: Renamed template tag library from ``form_utils_tags``
   to ``form_utils``.

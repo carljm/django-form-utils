@@ -24,7 +24,7 @@ long_description = open('README.rst').read() + '\n\n' + open('CHANGES.rst').read
 
 setup(
     name='django-form-utils',
-    version='0.3.1',
+    version='0.3.1.post%s' % hgrev,
     description='Form utilities for Django',
     long_description=long_description,
     author='Carl Meyer',

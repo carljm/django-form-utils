@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-tip (unreleased)
-----------------
+0.3.1 (2013.06.25)
+------------------
 
 - Call ``FileInput.render`` from ``ImageWidget.render``, ensuring no value is
   output in HTML. Fixes GH-4. Thanks Aron Griffis.

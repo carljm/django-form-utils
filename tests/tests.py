@@ -473,7 +473,7 @@ class ImageWidgetTests(TestCase):
         """
         widget = ImageWidget()
         html = widget.render('fieldname', FieldFile(None, FileField(), 'something.txt'))
-        self.assertHTMLEqual(html, '<input type="file" name="fieldname" value="something.txt" />')
+        self.assertHTMLEqual(html, '<input type="file" name="fieldname" />')
 
     def test_custom_template(self):
         """

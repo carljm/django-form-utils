@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.contrib import admin
 from django import forms
 
-from form_utils.fields import ClearableFileField
+from .fields import ClearableFileField
+
 
 class ClearableFileFieldsAdmin(admin.ModelAdmin):
     def formfield_for_dbfield(self, db_field, **kwargs):

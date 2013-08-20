@@ -1,12 +1,19 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django import forms
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils import six
 
-from form_utils.widgets import ClearableFileInput
+from .widgets import ClearableFileInput
 
+
+@python_2_unicode_compatible
 class FakeEmptyFieldFile(object):
     """
     A fake FieldFile that will convice a FileField model field to
     actually replace an existing file name with an empty string.
-    
+
     FileField.save_form_data only overwrites its instance data if the
     incoming form data evaluates to True in a boolean context (because
     an empty file input is assumed to mean "no change"). We want to be
@@ -25,17 +32,18 @@ class FakeEmptyFieldFile(object):
     cleared (ticket 7048).
 
     """
-    def __unicode__(self):
-        return u''
+    def __str__(self):
+        return six.text_type('')
     _committed = True
+
 
 class ClearableFileField(forms.MultiValueField):
     default_file_field_class = forms.FileField
     widget = ClearableFileInput
-    
+
     def __init__(self, file_field=None, template=None, *args, **kwargs):
         file_field = file_field or self.default_file_field_class(*args,
-                                                                  **kwargs)
+                                                                 **kwargs)
         fields = (file_field, forms.BooleanField(required=False))
         kwargs['required'] = file_field.required
         kwargs['widget'] = self.widget(file_widget=file_field.widget,
@@ -46,6 +54,7 @@ class ClearableFileField(forms.MultiValueField):
         if data_list[1] and not data_list[0]:
             return FakeEmptyFieldFile()
         return data_list[0]
+
 
 class ClearableImageField(ClearableFileField):
     default_file_field_class = forms.ImageField

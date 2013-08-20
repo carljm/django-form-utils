@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import django
 from django import forms
 from django import template
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models.fields.files import FieldFile, ImageFieldFile, FileField, ImageField
 from django.test import TestCase
+from django.utils import six
 
 from mock import patch
 
@@ -555,14 +559,14 @@ class ClearableFileInputTests(TestCase):
 
 
 class ClearableFileFieldTests(TestCase):
-    upload = SimpleUploadedFile('something.txt', 'Something')
+    upload = SimpleUploadedFile('something.txt', b'Something')
 
     def test_bound_redisplay(self):
         class TestForm(forms.Form):
             f = ClearableFileField()
         form = TestForm(files={'f_0': self.upload})
         self.assertHTMLEqual(
-            unicode(form['f']),
+            six.text_type(form['f']),
             u'<input type="file" name="f_0" id="id_f_0" />'
             u' Clear: <input type="checkbox" name="f_1" id="id_f_1" />'
             )

@@ -1,17 +1,20 @@
+# -*- coding: utf-8 -*-
 """
 templatetags for django-form-utils
 
 """
-from __future__ import absolute_import
+from __future__ import unicode_literals
 
 from django import forms
 from django import template
 from django.template.loader import render_to_string
+from django.utils import six
 
-from form_utils.forms import BetterForm, BetterModelForm
-from form_utils.utils import select_template_from_string
+from ..forms import BetterForm, BetterModelForm
+from ..utils import select_template_from_string
 
 register = template.Library()
+
 
 @register.filter
 def render(form, template_name=None):
@@ -40,21 +43,16 @@ def render(form, template_name=None):
     return tpl.render(template.Context({'form': form}))
 
 
-
 @register.filter
 def label(boundfield, contents=None):
     """Render label tag for a boundfield, optionally with given contents."""
     label_text = contents or boundfield.label
     id_ = boundfield.field.widget.attrs.get('id') or boundfield.auto_id
 
-    return render_to_string(
-        "forms/_label.html",
-        {
-            "label_text": label_text,
-            "id": id_,
-            "field": boundfield,
-            })
-
+    return render_to_string("forms/_label.html", {
+        "label_text": label_text,
+        "id": id_,
+        "field": boundfield})
 
 
 @register.filter
@@ -62,9 +60,8 @@ def value_text(boundfield):
     """Return the value for given boundfield as human-readable text."""
     val = boundfield.value()
     # If choices is set, use the display label
-    return unicode(
+    return six.text_type(
         dict(getattr(boundfield.field, "choices", [])).get(val, val))
-
 
 
 @register.filter
@@ -73,8 +70,7 @@ def selected_values(boundfield):
     val = boundfield.value()
     # If choices is set, use the display label
     choice_dict = dict(getattr(boundfield.field, "choices", []))
-    return [unicode(choice_dict.get(v, v)) for v in val]
-
+    return [six.text_type(choice_dict.get(v, v)) for v in val]
 
 
 @register.filter
@@ -83,13 +79,10 @@ def optional(boundfield):
     return not boundfield.field.required
 
 
-
 @register.filter
 def is_checkbox(boundfield):
     """Return True if this field's widget is a CheckboxInput."""
-    return isinstance(
-        boundfield.field.widget, forms.CheckboxInput)
-
+    return isinstance(boundfield.field.widget, forms.CheckboxInput)
 
 
 @register.filter
@@ -98,12 +91,10 @@ def is_multiple(boundfield):
     return isinstance(boundfield.field, forms.MultipleChoiceField)
 
 
-
 @register.filter
 def is_select(boundfield):
     """Return True if this field is a ChoiceField (or subclass)."""
     return isinstance(boundfield.field, forms.ChoiceField)
-
 
 
 @register.filter

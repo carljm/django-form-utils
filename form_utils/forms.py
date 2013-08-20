@@ -1,32 +1,36 @@
+# -*- coding: utf-8 -*-
 """
 forms for django-form-utils
 
 Time-stamp: <2010-04-28 02:57:16 carljm forms.py>
 
 """
+from __future__ import unicode_literals
 from copy import deepcopy
 
 from django import forms
 from django.forms.util import flatatt, ErrorDict
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils import six
 from django.utils.safestring import mark_safe
 
-class Fieldset(object):
-    """
-    An iterable Fieldset with a legend and a set of BoundFields.
 
-    """
-    def __init__(self, form, name, boundfields, legend='', classes='', description=''):
+@python_2_unicode_compatible
+class Fieldset(object):
+    """An iterable Fieldset with a legend and a set of BoundFields."""
+    def __init__(self, form, name, boundfields, legend='', classes='',
+                 description=''):
         self.form = form
         self.boundfields = boundfields
-        if legend is None: legend = name
+        if legend is None:
+            legend = name
         self.legend = legend and mark_safe(legend)
         self.classes = classes
         self.description = mark_safe(description)
         self.name = name
 
-
     def _errors(self):
-        return ErrorDict(((k, v) for (k, v) in self.form.errors.iteritems()
+        return ErrorDict(((k, v) for (k, v) in six.iteritems(self.form.errors)
                           if k in [f.name for f in self.boundfields]))
     errors = property(_errors)
 
@@ -37,8 +41,11 @@ class Fieldset(object):
     def __repr__(self):
         return "%s('%s', %s, legend='%s', classes='%s', description='%s')" % (
             self.__class__.__name__, self.name,
-            [f.name for f in self.boundfields], self.legend, self.classes, self.description)
+            [f.name for f in self.boundfields], self.legend, self.classes,
+            self.description)
 
+
+@python_2_unicode_compatible
 class FieldsetCollection(object):
     def __init__(self, form, fieldsets):
         self.form = form
@@ -71,13 +78,16 @@ class FieldsetCollection(object):
                 field_names = [n for n in options['fields']
                                if n in self.form.fields]
             except KeyError:
-                raise ValueError("Fieldset definition must include 'fields' option." )
-            boundfields = [forms.forms.BoundField(self.form, self.form.fields[n], n)
+                message = "Fieldset definition must include 'fields' option."
+                raise ValueError(message)
+            boundfields = [forms.forms.BoundField(self.form,
+                                                  self.form.fields[n], n)
                            for n in field_names]
             self._cached_fieldsets.append(Fieldset(self.form, name,
-                boundfields, options.get('legend', None), 
+                boundfields, options.get('legend', None),
                 ' '.join(options.get('classes', ())),
                 options.get('description', '')))
+
 
 def _get_meta_attr(attrs, attr, default):
     try:
@@ -85,19 +95,18 @@ def _get_meta_attr(attrs, attr, default):
     except (KeyError, AttributeError):
         ret = default
     return ret
-            
+
+
 def _set_meta_attr(attrs, attr, value):
     try:
         setattr(attrs['Meta'], attr, value)
         return True
     except KeyError:
         return False
-            
-def get_fieldsets(bases, attrs):
-    """
-    Get the fieldsets definition from the inner Meta class.
 
-    """
+
+def get_fieldsets(bases, attrs):
+    """Get the fieldsets definition from the inner Meta class."""
     fieldsets = _get_meta_attr(attrs, 'fieldsets', None)
     if fieldsets is None:
         #grab the fieldsets from the first base class that has them
@@ -108,11 +117,9 @@ def get_fieldsets(bases, attrs):
     fieldsets = fieldsets or []
     return fieldsets
 
-def get_fields_from_fieldsets(fieldsets):
-    """
-    Get a list of all fields included in a fieldsets definition.
 
-    """
+def get_fields_from_fieldsets(fieldsets):
+    """Get a list of all fields included in a fieldsets definition."""
     fields = []
     try:
         for name, options in fieldsets:
@@ -123,12 +130,11 @@ def get_fields_from_fieldsets(fieldsets):
                          'with a "fields" key')
     return fields
 
-def get_row_attrs(bases, attrs):
-    """
-    Get the row_attrs definition from the inner Meta class.
 
-    """
+def get_row_attrs(bases, attrs):
+    """Get the row_attrs definition from the inner Meta class."""
     return _get_meta_attr(attrs, 'row_attrs', {})
+
 
 def _mark_row_attrs(bf, form):
     row_attrs = deepcopy(form._row_attrs.get(bf.name, {}))
@@ -145,6 +151,7 @@ def _mark_row_attrs(bf, form):
     bf.row_attrs = mark_safe(flatatt(row_attrs))
     return bf
 
+
 class BetterFormBaseMetaclass(type):
     def __new__(cls, name, bases, attrs):
         attrs['base_fieldsets'] = get_fieldsets(bases, attrs)
@@ -153,18 +160,22 @@ class BetterFormBaseMetaclass(type):
             _get_meta_attr(attrs, 'exclude', None) is None):
             _set_meta_attr(attrs, 'fields', fields)
         attrs['base_row_attrs'] = get_row_attrs(bases, attrs)
+
         new_class = super(BetterFormBaseMetaclass,
                           cls).__new__(cls, name, bases, attrs)
         return new_class
 
+
 class BetterFormMetaclass(BetterFormBaseMetaclass,
-                            forms.forms.DeclarativeFieldsMetaclass):
+                          forms.forms.DeclarativeFieldsMetaclass):
     pass
 
+
 class BetterModelFormMetaclass(BetterFormBaseMetaclass,
-                                 forms.models.ModelFormMetaclass):
+                               forms.models.ModelFormMetaclass):
     pass
-    
+
+
 class BetterBaseForm(object):
     """
     ``BetterForm`` and ``BetterModelForm`` are subclasses of Form
@@ -181,7 +192,7 @@ class BetterBaseForm(object):
     ``BoundField``, depending on whether the field is required.
 
     There is no automatic inheritance of ``row_attrs``.
-    
+
     The fieldsets declaration is a list of two-tuples very similar to
     the ``fieldsets`` option on a ModelAdmin class in
     ``django.contrib.admin``.
@@ -226,8 +237,8 @@ class BetterBaseForm(object):
     @property
     def fieldsets(self):
         if not self._fieldset_collection:
-            self._fieldset_collection = FieldsetCollection(self,
-                                                           self._fieldsets)
+            self._fieldset_collection = FieldsetCollection(
+                self, self._fieldsets)
         return self._fieldset_collection
 
     def __iter__(self):
@@ -238,43 +249,47 @@ class BetterBaseForm(object):
         bf = super(BetterBaseForm, self).__getitem__(name)
         return _mark_row_attrs(bf, self)
 
-class BetterForm(BetterBaseForm, forms.Form):
-    __metaclass__ = BetterFormMetaclass
+
+class BetterForm(six.with_metaclass(BetterFormMetaclass, BetterBaseForm),
+                 forms.Form):
     __doc__ = BetterBaseForm.__doc__
 
-class BetterModelForm(BetterBaseForm, forms.ModelForm):
-    __metaclass__ = BetterModelFormMetaclass
-    __doc__ = BetterBaseForm.__doc__
-    
 
-class BasePreviewForm (object):
+class BetterModelForm(six.with_metaclass(BetterModelFormMetaclass,
+                                         BetterBaseForm), forms.ModelForm):
+    __doc__ = BetterBaseForm.__doc__
+
+
+class BasePreviewFormMixin(object):
     """
-    Mixin to add preview functionality to a form.  If the form is submitted with 
-    the following k/v pair in its ``data`` dictionary:
-        
+    Mixin to add preview functionality to a form.  If the form is submitted
+    with the following k/v pair in its ``data`` dictionary:
+
         'submit': 'preview'    (value string is case insensitive)
-    
+
     Then ``PreviewForm.preview`` will be marked ``True`` and the form will
-    be marked invalid (though this invalidation will not put an error in 
+    be marked invalid (though this invalidation will not put an error in
     its ``errors`` dictionary).
-    
+
     """
     def __init__(self, *args, **kwargs):
-        super(BasePreviewForm, self).__init__(*args, **kwargs)
+        super(BasePreviewFormMixin, self).__init__(*args, **kwargs)
         self.preview = self.check_preview(kwargs.get('data', None))
-    
+
     def check_preview(self, data):
         if data and data.get('submit', '').lower() == u'preview':
             return True
         return False
-    
+
     def is_valid(self, *args, **kwargs):
         if self.preview:
             return False
-        return super(BasePreviewForm, self).is_valid()
+        return super(BasePreviewFormMixin, self).is_valid()
 
-class PreviewModelForm(BasePreviewForm, BetterModelForm):
+
+class PreviewModelForm(BasePreviewFormMixin, BetterModelForm):
     pass
 
-class PreviewForm(BasePreviewForm, BetterForm):
+
+class PreviewForm(BasePreviewFormMixin, BetterForm):
     pass

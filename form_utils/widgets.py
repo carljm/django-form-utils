@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 widgets for django-form-utils
 
@@ -5,16 +6,19 @@ parts of this code taken from http://www.djangosnippets.org/snippets/934/
  - thanks baumer1122
 
 """
+from __future__ import unicode_literals
+
 import posixpath
 
 from django import forms
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
-from form_utils.settings import JQUERY_URL
+from .settings import JQUERY_URL
 
 try:
     from sorl.thumbnail import get_thumbnail
+
     def thumbnail(image_path, width, height):
         geometry_string = 'x'.join([str(width), str(height)])
         t = get_thumbnail(image_path, geometry_string)
@@ -22,14 +26,17 @@ try:
 except ImportError:
     try:
         from easy_thumbnails.files import get_thumbnailer
+
         def thumbnail(image_path, width, height):
             thumbnail_options = dict(size=(width, height), crop=True)
-            thumbnail = get_thumbnailer(image_path).get_thumbnail(thumbnail_options)
+            thumbnail = get_thumbnailer(image_path).get_thumbnail(
+                thumbnail_options)
             return u'<img src="%s" alt="%s" />' % (thumbnail.url, image_path)
     except ImportError:
         def thumbnail(image_path, width, height):
             absolute_url = posixpath.join(settings.MEDIA_URL, image_path)
             return u'<img src="%s" alt="%s" />' % (absolute_url, image_path)
+
 
 class ImageWidget(forms.FileInput):
     template = '%(input)s<br />%(image)s'
@@ -50,6 +57,7 @@ class ImageWidget(forms.FileInput):
         else:
             output = input_html
         return mark_safe(output)
+
 
 class ClearableFileInput(forms.MultiWidget):
     default_file_widget_class = forms.FileInput
@@ -83,13 +91,12 @@ class ClearableFileInput(forms.MultiWidget):
 
 root = lambda path: posixpath.join(settings.STATIC_URL, path)
 
+
 class AutoResizeTextarea(forms.Textarea):
     """
     A Textarea widget that automatically resizes to accomodate its contents.
-
     """
     class Media:
-
         js = (JQUERY_URL,
               root('form_utils/js/jquery.autogrow.js'),
               root('form_utils/js/autoresize.js'))
@@ -104,6 +111,7 @@ class AutoResizeTextarea(forms.Textarea):
         attrs.setdefault('rows', 5)
         super(AutoResizeTextarea, self).__init__(*args, **kwargs)
 
+
 class InlineAutoResizeTextarea(AutoResizeTextarea):
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs', {})
@@ -114,4 +122,3 @@ class InlineAutoResizeTextarea(AutoResizeTextarea):
         attrs.setdefault('cols', 40)
         attrs.setdefault('rows', 2)
         super(InlineAutoResizeTextarea, self).__init__(*args, **kwargs)
-

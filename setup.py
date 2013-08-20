@@ -44,5 +44,5 @@ setup(
     package_data={'form_utils': ['templates/form_utils/*.html',
                                  'media/form_utils/js/*.js']},
     test_suite='tests.runtests.runtests',
-    tests_require=['Django', 'mock'],
+    tests_require=['Django', 'mock', 'Pillow'],
 )

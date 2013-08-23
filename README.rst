@@ -48,8 +48,8 @@ and ``templates/form_utils/form.html``.
 Dependencies
 ------------
 
-``django-form-utils`` is tested on `Django`_ 1.4 and later and `Python`_ 2.6
-and later.
+``django-form-utils`` is tested on `Django`_ 1.4 and later and `Python`_ 2.6,
+2.7, and 3.3. It is known to be incompatible with Python 3.0, 3.1, and 3.2.
 
 `ImageWidget`_ requires the `Python Imaging Library`_.
 `sorl-thumbnail`_ or `easy-thumbnails`_ is optional, but without it
@@ -63,7 +63,7 @@ Google-served version; see `JQUERY_URL`_).
 .. _Python: http://www.python.org/
 .. _sorl-thumbnail: http://pypi.python.org/pypi/sorl-thumbnail
 .. _easy-thumbnails: http://pypi.python.org/pypi/easy-thumbnails
-.. _Python Imaging Library: http://www.pythonware.com/products/pil/
+.. _Python Imaging Library: http://python-imaging.github.io/
 .. _jQuery: http://www.jquery.com/
 
 Usage

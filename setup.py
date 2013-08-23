@@ -10,7 +10,7 @@ try:
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if not p.returncode:
             fh = open('HGREV', 'w')
-            fh.write(p.communicate()[0].splitlines()[0])
+            fh.write(str(p.communicate()[0].splitlines()[0]))
             fh.close()
 except (OSError, IndexError):
     pass
@@ -28,7 +28,7 @@ setup(
     description='Form utilities for Django',
     long_description=long_description,
     author='Carl Meyer',
-    author_email='carl@dirtcircle.com',
+    author_email='carl@oddbird.net',
     url='http://bitbucket.org/carljm/django-form-utils/',
     packages=['form_utils', 'form_utils.templatetags'],
     classifiers=[
@@ -38,6 +38,11 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
         'Framework :: Django',
     ],
     zip_safe=False,

@@ -392,6 +392,10 @@ class BetterFormTests(TestCase):
         self.assertEqual(ExcludePartialPersonForm._meta.fields, None)
 
 
+number_field_type = 'number' if django.VERSION > (1, 6, 0) else 'text'
+label_suffix = ':' if django.VERSION > (1, 6, 0) else ''
+
+
 class BoringForm(forms.Form):
     boredom = forms.IntegerField()
     excitement = forms.IntegerField()
@@ -401,16 +405,16 @@ class TemplatetagTests(TestCase):
         u'<fieldset class="fieldset_main">'
         u'<ul>'
         u'<li>'
-        u'<label for="id_boredom">Boredom</label>'
+        u'<label for="id_boredom">Boredom%(suffix)s</label>'
         u'<input type="%(type)s" name="boredom" id="id_boredom" />'
         u'</li>'
         u'<li>'
-        u'<label for="id_excitement">Excitement</label>'
+        u'<label for="id_excitement">Excitement%(suffix)s</label>'
         u'<input type="%(type)s" name="excitement" id="id_excitement" />'
         u'</li>'
         u'</ul>'
         u'</fieldset>'
-        ) % {'type': 'number' if django.VERSION > (1, 6, 0) else 'text'}
+        ) % {'type': number_field_type, 'suffix': label_suffix}
 
     def test_render_form(self):
         """
@@ -426,11 +430,11 @@ class TemplatetagTests(TestCase):
         u'<fieldset class="">'
         u'<ul>'
         u'<li class="required">'
-        u'<label for="id_name">Name</label>'
+        u'<label for="id_name">Name%(suffix)s</label>'
         u'<input type="text" name="name" id="id_name" />'
         u'</li>'
         u'<li class="required">'
-        u'<label for="id_position">Position</label>'
+        u'<label for="id_position">Position%(suffix)s</label>'
         u'<input type="text" name="position" id="id_position" />'
         u'</li>'
         u'</ul>'
@@ -439,12 +443,12 @@ class TemplatetagTests(TestCase):
         u'<legend>Optional</legend>'
         u'<ul>'
         u'<li class="optional">'
-        u'<label for="id_reference">Reference</label>'
+        u'<label for="id_reference">Reference%(suffix)s</label>'
         u'<input type="text" name="reference" id="id_reference" />'
         u'</li>'
         u'</ul>'
         u'</fieldset>'
-        )
+        ) % {'suffix': label_suffix}
 
     def test_render_betterform(self):
         """

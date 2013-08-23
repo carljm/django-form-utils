@@ -4,6 +4,8 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Add Python 3.3 compatibility. Thanks chmodas! (Merge of GH-5.)
+
 0.3.1 (2013.06.25)
 ------------------
 

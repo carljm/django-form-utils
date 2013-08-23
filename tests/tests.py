@@ -5,7 +5,8 @@ import django
 from django import forms
 from django import template
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.db.models.fields.files import FieldFile, ImageFieldFile, FileField, ImageField
+from django.db.models.fields.files import (
+    FieldFile, ImageFieldFile, FileField, ImageField)
 from django.test import TestCase
 from django.utils import six
 
@@ -17,6 +18,7 @@ from form_utils.fields import ClearableFileField, ClearableImageField
 
 from .models import Person, Document
 
+
 class ApplicationForm(BetterForm):
     """
     A sample form with fieldsets.
@@ -25,10 +27,12 @@ class ApplicationForm(BetterForm):
     name = forms.CharField()
     position = forms.CharField()
     reference = forms.CharField(required=False)
+
     class Meta:
         fieldsets = (('main', {'fields': ('name', 'position'), 'legend': ''}),
                      ('Optional', {'fields': ('reference',),
                                    'classes': ('optional',)}))
+
 
 class InheritedForm(ApplicationForm):
     """
@@ -38,6 +42,7 @@ class InheritedForm(ApplicationForm):
     """
     pass
 
+
 class MudSlingerApplicationForm(ApplicationForm):
     """
     Inherited forms can manually inherit and change/override the
@@ -45,6 +50,7 @@ class MudSlingerApplicationForm(ApplicationForm):
 
     """
     target = forms.CharField()
+
     class Meta:
         fieldsets = list(ApplicationForm.Meta.fieldsets)
         fieldsets[0] = ('main', {'fields': ('name', 'position', 'target'),
@@ -74,6 +80,7 @@ class HoneypotForm(BetterForm):
     """
     honeypot = forms.CharField()
     name = forms.CharField()
+
     class Meta:
         row_attrs = {'honeypot': {'style': 'display: none'}}
 
@@ -88,6 +95,7 @@ class PersonForm(BetterModelForm):
 
     """
     title = forms.CharField()
+
     class Meta:
         model = Person
         fieldsets = [('main', {'fields': ['name'],
@@ -109,6 +117,7 @@ class PartialPersonForm(BetterModelForm):
         model = Person
         fieldsets = [('main', {'fields': ['name']})]
 
+
 class ManualPartialPersonForm(BetterModelForm):
     """
     A ``BetterModelForm`` whose fieldsets don't contain all fields
@@ -119,6 +128,7 @@ class ManualPartialPersonForm(BetterModelForm):
         model = Person
         fieldsets = [('main', {'fields': ['name']})]
         fields = ['name', 'age']
+
 
 class ExcludePartialPersonForm(BetterModelForm):
     """
@@ -131,6 +141,7 @@ class ExcludePartialPersonForm(BetterModelForm):
         fieldsets = [('main', {'fields': ['name']})]
         exclude = ['age']
 
+
 class AcrobaticPersonForm(PersonForm):
     """
     A ``BetterModelForm`` that inherits from another and overrides one
@@ -139,10 +150,39 @@ class AcrobaticPersonForm(PersonForm):
     """
     agility = forms.IntegerField()
     speed = forms.IntegerField()
+
     class Meta(PersonForm.Meta):
         fieldsets = list(PersonForm.Meta.fieldsets)
-        fieldsets = fieldsets[:1] + \
-                     [('Acrobatics', {'fields': ('age', 'speed', 'agility')})]
+        fieldsets = fieldsets[:1] + [
+            ('Acrobatics', {'fields': ('age', 'speed', 'agility')})]
+
+
+class AbstractPersonForm(BetterModelForm):
+    """
+    An abstract ``BetterModelForm`` without fieldsets.
+
+    """
+    title = forms.CharField()
+
+    class Meta:
+        pass
+
+
+class InheritedMetaAbstractPersonForm(AbstractPersonForm):
+    """
+    A ``BetterModelForm`` that inherits from abstract one and its Meta class
+    and adds fieldsets
+
+    """
+    class Meta(AbstractPersonForm.Meta):
+        model = Person
+        fieldsets = [('main', {'fields': ['name'],
+                               'legend': '',
+                               'classes': ['main']}),
+                     ('More', {'fields': ['age'],
+                               'description': 'Extra information',
+                               'classes': ['more', 'collapse']}),
+                     (None, {'fields': ['title']})]
 
 
 class BetterFormTests(TestCase):
@@ -249,6 +289,32 @@ class BetterFormTests(TestCase):
                                 'classes': ''
                                 }),
                     ],
+            InheritedMetaAbstractPersonForm:
+            [
+                    (['name'],
+                     {
+                                'name': 'main',
+                                'legend': '',
+                                'description': '',
+                                'classes': 'main',
+                                }),
+                    (['age'],
+                    {
+                                'name': 'More',
+                                'legend': 'More',
+                                'description': 'Extra information',
+                                'classes': 'more collapse'
+                                }),
+                    (['title'],
+                    {
+                                'name': None,
+                                'legend': None,
+                                'description': '',
+                                'classes': ''
+                                }),
+                    ],
+
+
         }
 
     def test_iterate_fieldsets(self):

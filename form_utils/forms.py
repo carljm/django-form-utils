@@ -128,7 +128,7 @@ def get_fields_from_fieldsets(fieldsets):
         raise ValueError('"fieldsets" must be an iterable of two-tuples, '
                          'and the second tuple must be a dictionary '
                          'with a "fields" key')
-    return fields
+    return fields or None
 
 
 def get_row_attrs(bases, attrs):

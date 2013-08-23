@@ -4,6 +4,8 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Fixed inheritance of form Meta class. Thanks chmodas. Fixed BB-16.
+
 1.0 (2013.08.22)
 ----------------
 

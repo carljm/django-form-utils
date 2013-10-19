@@ -4,6 +4,10 @@ CHANGES
 tip (unreleased)
 ----------------
 
+- Removed invalid uses of ``python_2_unicode_compatible`` that broke with
+  https://github.com/django/django/commit/589dc49e129f63801c54c15e408c944a345b3dfe
+  Thanks ocZio for the report.
+
 - Fixed inheritance of form Meta class. Thanks chmodas. Fixed BB-16.
 
 1.0 (2013.08.22)

@@ -10,12 +10,10 @@ from copy import deepcopy
 
 from django import forms
 from django.forms.util import flatatt, ErrorDict
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils import six
 from django.utils.safestring import mark_safe
 
 
-@python_2_unicode_compatible
 class Fieldset(object):
     """An iterable Fieldset with a legend and a set of BoundFields."""
     def __init__(self, form, name, boundfields, legend='', classes='',
@@ -45,7 +43,6 @@ class Fieldset(object):
             self.description)
 
 
-@python_2_unicode_compatible
 class FieldsetCollection(object):
     def __init__(self, form, fieldsets):
         self.form = form

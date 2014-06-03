@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-import os, sys
+import os
+import sys
 
+import django
 from django.conf import settings
-
 
 if not settings.configured:
     settings_dict = dict(
@@ -21,6 +22,10 @@ if not settings.configured:
     settings.configure(**settings_dict)
 
 
+if django.VERSION >= (1, 7):
+    django.setup()
+
+
 def runtests(*test_args):
     if not test_args:
         test_args = ['tests']
@@ -28,8 +33,11 @@ def runtests(*test_args):
     parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.insert(0, parent)
 
-    from django.test.simple import DjangoTestSuiteRunner
-    failures = DjangoTestSuiteRunner(
+    try:
+        from django.test.runner import DiscoveryRunner as Runner
+    except ImportError:
+        from django.test.simple import DjangoTestSuiteRunner as Runner
+    failures = Runner(
         verbosity=1, interactive=True, failfast=False).run_tests(test_args)
     sys.exit(failures)
 

@@ -14,6 +14,18 @@ from django.utils import six
 from django.utils.safestring import mark_safe
 
 
+def with_metaclass(meta, *bases):
+    """Create a base class with a metaclass.
+
+    I'm not sure exactly why this is needed, but the implementation in six
+    changed (see
+    https://github.com/django/django/commit/a2340ac6d6b7e31c7e97e8fdaf3e1d73e43b24ba)
+    and the new version doesn't work here.
+
+    """
+    return meta(str("NewBase"), bases, {})
+
+
 class Fieldset(object):
     """An iterable Fieldset with a legend and a set of BoundFields."""
     def __init__(self, form, name, boundfields, legend='', classes='',
@@ -247,13 +259,13 @@ class BetterBaseForm(object):
         return _mark_row_attrs(bf, self)
 
 
-class BetterForm(six.with_metaclass(BetterFormMetaclass, BetterBaseForm),
+class BetterForm(with_metaclass(BetterFormMetaclass, BetterBaseForm),
                  forms.Form):
     __doc__ = BetterBaseForm.__doc__
 
 
-class BetterModelForm(six.with_metaclass(BetterModelFormMetaclass,
-                                         BetterBaseForm), forms.ModelForm):
+class BetterModelForm(with_metaclass(BetterModelFormMetaclass,
+                                     BetterBaseForm), forms.ModelForm):
     __doc__ = BetterBaseForm.__doc__
 
 

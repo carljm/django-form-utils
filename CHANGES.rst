@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-tip (unreleased)
-----------------
+1.0.2 (2014-09-08)
+------------------
 
 - Fixed compatibility with Django 1.7. Fixed BB-20 and GH-8.
 

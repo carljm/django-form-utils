@@ -17,6 +17,7 @@ if not settings.configured:
         MEDIA_ROOT=os.path.join(os.path.dirname(__file__), 'media'),
         MEDIA_URL='/media/',
         STATIC_URL='/static/',
+        MIDDLEWARE_CLASSES=[],
         )
 
     settings.configure(**settings_dict)
@@ -34,7 +35,7 @@ def runtests(*test_args):
     sys.path.insert(0, parent)
 
     try:
-        from django.test.runner import DiscoveryRunner as Runner
+        from django.test.runner import DiscoverRunner as Runner
     except ImportError:
         from django.test.simple import DjangoTestSuiteRunner as Runner
     failures = Runner(

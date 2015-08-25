@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-tip (unreleased)
-----------------
+1.0.3 (2015-08-25)
+------------------
 
 - Fixed compatibility with Django 1.9. Fixed GH-12.
 

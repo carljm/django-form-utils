@@ -56,4 +56,4 @@ When submitting a pull request, please note whether you've run the tests with
 tox (and against which versions). Before a pull request can be merged, all
 tests must pass on all configured tox environments.
 
-.. _tox: http://tox.readthedocs.org/en/latest/
+.. _tox: https://tox.readthedocs.io/en/latest/
